@@ -1,0 +1,7 @@
+---
+name: splunk
+templates:
+  ctl.erb: bin/ctl
+
+packages:
+- splunk

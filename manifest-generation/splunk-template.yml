@@ -1,0 +1,46 @@
+---
+
+meta: ~
+iaas_settings: ~
+
+name: cf-splunk
+director_uuid: (( meta.director_uuid ))
+
+releases:
+- name: splunk
+  version: "latest"
+
+compilation:
+  workers: (( iaas_settings.compilation_workers || 4))
+  network: splunk_z1
+  reuse_compilation_vms: true
+  cloud_properties: (( iaas_settings.compilation_cloud_properties ))
+
+update:
+  canaries: 1
+  canary_watch_time: (( iaas_settings.watch_time || "10000-600000" ))
+  update_watch_time: (( iaas_settings.watch_time || "10000-600000" ))
+  max_in_flight: 1
+  serial: true
+
+networks:
+  - name: splunk_z1
+    type: manual
+    subnets: (( iaas_settings.subnet_configs.splunk_z1.subnets ))
+
+jobs:
+- name: splunk_z1
+  templates:
+    - name: splunk
+      release: splunk
+  instances: 1
+  resource_pool: splunk_z1
+  networks:
+  - name: splunk_z1
+    static_ips: (( static_ips(0) ))
+
+resource_pools:
+- name: splunk_z1
+  network: splunk_z1
+  stemcell: (( iaas_settings.stemcell ))
+  cloud_properties: (( iaas_settings.resource_pool_cloud_properties.splunk_z1.cloud_properties ))
