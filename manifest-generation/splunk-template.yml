@@ -32,7 +32,7 @@ networks:
 jobs:
 - name: splunk_z1
   templates:
-    - name: splunk
+    - name: splunk-forwarder
       release: splunk
   instances: 1
   resource_pool: splunk_z1

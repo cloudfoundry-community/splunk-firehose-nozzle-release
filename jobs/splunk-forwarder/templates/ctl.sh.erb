@@ -1,8 +1,8 @@
 #!/bin/bash
 
-RUN_DIR=/var/vcap/sys/run/splunk
-LOG_DIR=/var/vcap/sys/log/splunk
-JOB_DIR=/var/vcap/jobs/splunk
+RUN_DIR=/var/vcap/sys/run/splunk-forwarder
+LOG_DIR=/var/vcap/sys/log/splunk-forwarder
+JOB_DIR=/var/vcap/jobs/splunk-forwarder
 PACKAGE_DIR=/var/vcap/packages/splunk
 PIDFILE=${RUN_DIR}/pid
 
@@ -22,8 +22,8 @@ case $1 in
     ln -fs ${JOB_DIR}/config/hec_inputs.conf ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/inputs.conf
 
     exec /var/vcap/packages/splunk/bin/splunk start --accept-license \
-      >>  $LOG_DIR/web_ui.stdout.log \
-      2>> $LOG_DIR/web_ui.stderr.log
+      >>  $LOG_DIR/forwarder.stdout.log \
+      2>> $LOG_DIR/forwarder.stderr.log
 
     ;;
 

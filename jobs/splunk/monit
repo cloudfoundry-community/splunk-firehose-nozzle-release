@@ -1,5 +1,0 @@
-check process web_ui
-  matching splunkd
-  start program "/var/vcap/jobs/splunk/bin/ctl.sh start"
-  stop program "/var/vcap/jobs/splunk/bin/ctl.sh stop"
-  group vcap

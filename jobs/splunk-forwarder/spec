@@ -1,5 +1,5 @@
 ---
-name: splunk
+name: splunk-forwarder
 templates:
   ctl.sh.erb: bin/ctl.sh
   system_outputs.conf.erb: config/system_outputs.conf
@@ -12,7 +12,7 @@ packages:
 properties:
   cf_splunk:
     indexer_host:
-      description: fully Hostname or ip address of indexer
+      description: Fully qualified hostname or ip address of indexer
     indexer_port:
       default: 9997
       description: Port indexer accepts traffic on
