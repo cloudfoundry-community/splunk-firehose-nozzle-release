@@ -2,6 +2,8 @@
 
 RUN_DIR=/var/vcap/sys/run/splunk
 LOG_DIR=/var/vcap/sys/log/splunk
+JOB_DIR=/var/vcap/jobs/splunk
+PACKAGE_DIR=/var/vcap/packages/splunk
 PIDFILE=${RUN_DIR}/pid
 
 case $1 in
@@ -12,9 +14,12 @@ case $1 in
 
     echo $$ > $PIDFILE
 
-    cd /var/vcap/packages/splunk
+    mkdir -p ${PACKAGE_DIR}/etc/system/local/
+    ln -fs ${JOB_DIR}/config/system_inputs.conf ${PACKAGE_DIR}/etc/system/local/inputs.conf
+    ln -fs ${JOB_DIR}/config/system_outputs.conf ${PACKAGE_DIR}/etc/system/local/outputs.conf
 
-    #export PATH=/var/vcap/packages/ruby_1.9.3/bin:$PATH
+    mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
+    ln -fs ${JOB_DIR}/config/hec_inputs.conf ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/inputs.conf
 
     exec /var/vcap/packages/splunk/bin/splunk start --accept-license \
       >>  $LOG_DIR/web_ui.stdout.log \

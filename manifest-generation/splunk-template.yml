@@ -2,6 +2,7 @@
 
 meta: ~
 iaas_settings: ~
+properties: ~
 
 name: cf-splunk
 director_uuid: (( meta.director_uuid ))

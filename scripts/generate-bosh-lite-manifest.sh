@@ -10,15 +10,15 @@ argument_error=false
 function usage(){
   >&2 echo "
  Usage:
-    $0 director-uuid
+    $0 director-uuid property-settings.yml
 
  Ex:
-    $0 \`bosh status --uuid\`
+    $0 \`bosh status --uuid\` properties.yml
 "
   exit 1
 }
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 2 ]; then
     usage
 fi
 
@@ -38,6 +38,7 @@ spiff merge \
     ./manifest-generation/splunk-template.yml \
    "${tmpdir}/director.yml" \
     ./manifest-generation/bosh-lite-iaas-settings.yml \
+    "$@" \
 > cf-splunk.yml
 
 popd > /dev/null

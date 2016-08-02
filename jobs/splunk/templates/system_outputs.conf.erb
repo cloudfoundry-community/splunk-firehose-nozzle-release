@@ -1,0 +1,10 @@
+[tcpout]
+defaultGroup = default-autolb-group
+
+[tcpout:default-autolb-group]
+server = <%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port') %>
+
+[tcpout-server://<%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port') %>]
+
+# todo: better ways to build this file I'm sure,
+# todo: for now simply taking a simple single server style config

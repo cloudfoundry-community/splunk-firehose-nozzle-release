@@ -1,7 +1,20 @@
 ---
 name: splunk
 templates:
-  ctl.erb: bin/ctl
+  ctl.sh.erb: bin/ctl.sh
+  system_outputs.conf.erb: config/system_outputs.conf
+  system_inputs.conf.erb: config/system_inputs.conf
+  hec_inputs.conf.erb: config/hec_inputs.conf
 
 packages:
 - splunk
+
+properties:
+  cf_splunk:
+    indexer_host:
+      description: fully Hostname or ip address of indexer
+    indexer_port:
+      default: 9997
+      description: Port indexer accepts traffic on
+    hec_token:
+      description: Credentials for talking to the HTTP event collector

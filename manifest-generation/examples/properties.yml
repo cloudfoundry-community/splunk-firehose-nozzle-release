@@ -1,0 +1,5 @@
+properties:
+  cf_splunk:
+    indexer_host: 192.168.50.1
+    indexer_port: 9997
+    hec_token: 46D19381-22DF-497F-A6E8-F88F12079823
