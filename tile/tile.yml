@@ -1,0 +1,58 @@
+---
+name: splunk
+label: Splunk
+description: Send logs to Splunk
+icon_file: resources/icon.png
+
+# org: test-org                       # Optional
+# space: test-space                   # Optional
+org_quota: 4096                       # Optional, memory quota in mb
+apply_open_security_group: true       # Apply open security group, default: false
+allow_paid_service_plans: true        # Allow paid service plans, default: false
+
+properties:
+- name: author
+  type: string
+  label: Author
+  value: Matt Cholick
+- name: author
+  type: string
+  label: Author
+  value: Roy Arsan
+
+forms:
+- name: splunk-config
+  label: Splunk
+  description: Custom Properties for Splunk
+  properties:
+  - name: indexer_host
+    type: string
+    label: Indexer host
+    description: Fully qualified hostname or ip address of indexer
+  - name: indexer_port
+    type: integer
+    label: Indexer port
+    description: Port indexer accepts traffic on
+  - name: hec_token
+    type: string
+    label: HEC Token
+    description: Credentials for talking to the HTTP event collector
+
+packages:
+- name: splunk-bosh-release
+  type: bosh-release
+  path: resources/splunk-bosh-release.tgz
+  jobs:
+  - name: splunk_z1
+    templates:
+    - name: splunk-forwarder
+      release: splunk
+    memory: 512
+    ephemeral_disk: 4096
+    cpu: 2
+    static_ip: 1
+    properties:
+      cf_splunk:
+        indexer_host: (( .properties.indexer_host ))
+        indexer_port: (( .properties.indexer_port ))
+        hec_token: (( .properties.hec_token ))

@@ -7,3 +7,8 @@ dev_releases
 .blobs
 blobs
 .dev_builds
+
+tile/tile-history.yml
+tile/product
+tile/release
+tile/resources/*.tgz
