@@ -1,8 +1,8 @@
 #!/bin/bash
 
-RUN_DIR=/var/vcap/sys/run/splunk-forwarder
-LOG_DIR=/var/vcap/sys/log/splunk-forwarder
-JOB_DIR=/var/vcap/jobs/splunk-forwarder
+RUN_DIR=/var/vcap/sys/run/splunk-full
+LOG_DIR=/var/vcap/sys/log/splunk-full
+JOB_DIR=/var/vcap/jobs/splunk-full
 PACKAGE_DIR=/var/vcap/packages/splunk
 PIDFILE=${RUN_DIR}/pid
 
@@ -11,18 +11,16 @@ case $1 in
   start)
     mkdir -p ${RUN_DIR} ${LOG_DIR}
     mkdir -p ${PACKAGE_DIR}/etc/system/local
-    mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local
 
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
 
     echo $$ > ${PIDFILE}
 
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
-    ln -fs ${JOB_DIR}/config/apps_splunk_httpinput_local/* ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
 
     exec chpst -u vcap:vcap /var/vcap/packages/splunk/bin/splunk start --accept-license \
-      >>  $LOG_DIR/forwarder.stdout.log \
-      2>> $LOG_DIR/forwarder.stderr.log
+      >>  $LOG_DIR/splunk.stdout.log \
+      2>> $LOG_DIR/splunk.stderr.log
 
     ;;
 

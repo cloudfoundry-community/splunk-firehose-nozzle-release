@@ -1,0 +1,9 @@
+---
+
+name: splunk-full
+templates:
+  ctl.sh.erb: bin/ctl.sh
+  system_inputs.conf.erb: config/system_local/inputs.conf
+
+packages:
+- splunk

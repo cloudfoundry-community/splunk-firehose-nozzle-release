@@ -35,12 +35,12 @@ meta:
 pushd "${release_dir}" > /dev/null
 
 spiff merge \
-    ./manifest-generation/splunk-template.yml \
+    ./manifest-generation/splunk-forwarder-template.yml \
    "${tmpdir}/director.yml" \
     ./manifest-generation/bosh-lite-iaas-settings.yml \
     "$@" \
-> cf-splunk.yml
+> cf-splunk-forwarder.yml
 
 popd > /dev/null
 
-echo "Manifest was generated at ${release_dir}/cf-splunk.yml"
+echo "Manifest was generated at ${release_dir}/cf-splunk-forwarder.yml"

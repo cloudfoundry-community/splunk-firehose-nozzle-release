@@ -1,10 +1,11 @@
 ---
+
 name: splunk-forwarder
 templates:
   ctl.sh.erb: bin/ctl.sh
-  system_outputs.conf.erb: config/system_outputs.conf
-  system_inputs.conf.erb: config/system_inputs.conf
-  hec_inputs.conf.erb: config/hec_inputs.conf
+  system_outputs.conf.erb: config/system_local/outputs.conf
+  system_inputs.conf.erb: config/system_local/inputs.conf
+  hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
 
 packages:
 - splunk

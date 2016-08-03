@@ -4,7 +4,7 @@ meta: ~
 iaas_settings: ~
 properties: ~
 
-name: cf-splunk
+name: cf-splunk-forwarder
 director_uuid: (( meta.director_uuid ))
 
 releases:
