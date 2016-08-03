@@ -5,6 +5,7 @@ templates:
   ctl.sh.erb: bin/ctl.sh
   system_outputs.conf.erb: config/system_local/outputs.conf
   system_inputs.conf.erb: config/system_local/inputs.conf
+  system_user-seed.conf.erb: config/system_local/user-seed.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
 
 packages:
@@ -12,6 +13,12 @@ packages:
 
 properties:
   cf_splunk:
+    admin_user:
+      default: admin
+      description: Admin user name
+    admin_pass:
+      default: changeme
+      description: Admin password
     indexer_host:
       description: Fully qualified hostname or ip address of indexer
     indexer_port:
