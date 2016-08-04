@@ -10,21 +10,30 @@ org_quota: 4096                       # Optional, memory quota in mb
 apply_open_security_group: true       # Apply open security group, default: false
 allow_paid_service_plans: true        # Allow paid service plans, default: false
 
+stemcell_criteria:
+  os: ubuntu-trusty
+  requires_cpi: false
+  version: '3262'
+
 properties:
 - name: author
   type: string
   label: Author
-  value: Matt Cholick
-- name: author
-  type: string
-  label: Author
-  value: Roy Arsan
+  value: Matt Cholick & Roy Arsan
 
 forms:
 - name: splunk-config
   label: Splunk
   description: Custom Properties for Splunk
   properties:
+  - name: splunk_admin_user
+    type: string
+    label: Admin user
+    description: Admin user name (internal to Splunk forwarder, only useful debugging)
+  - name: splunk_admin_pass
+    type: string
+    label: Admin password
+    description: Admin password
   - name: indexer_host
     type: string
     label: Indexer host
@@ -39,20 +48,29 @@ forms:
     description: Credentials for talking to the HTTP event collector
 
 packages:
+- name: app1
+  type: app
+  manifest:
+    path: resources/app.zip
+    command: python app.py
+    memory: 256M
+
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/splunk-bosh-release.tgz
+  path: resources/cf-splunk-0+dev.3.tgz
   jobs:
-  - name: splunk_z1
+  - name: splunk-forwarder
     templates:
     - name: splunk-forwarder
-      release: splunk
+      release: cf-splunk
     memory: 512
     ephemeral_disk: 4096
     cpu: 2
     static_ip: 1
     properties:
       cf_splunk:
-        indexer_host: (( .properties.indexer_host ))
-        indexer_port: (( .properties.indexer_port ))
-        hec_token: (( .properties.hec_token ))
+        admin_user: (( .properties.splunk_admin_user.value ))
+        admin_pass: (( .properties.splunk_admin_pass.value ))
+        indexer_host: (( .properties.indexer_host.value ))
+        indexer_port: (( .properties.indexer_port.value ))
+        hec_token: (( .properties.hec_token.value ))

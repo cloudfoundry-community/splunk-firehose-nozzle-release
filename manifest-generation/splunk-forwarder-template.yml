@@ -8,7 +8,7 @@ name: cf-splunk-forwarder
 director_uuid: (( meta.director_uuid ))
 
 releases:
-- name: splunk
+- name: cf-splunk
   version: "latest"
 
 compilation:
@@ -33,7 +33,7 @@ jobs:
 - name: splunk_z1
   templates:
     - name: splunk-forwarder
-      release: splunk
+      release: cf-splunk
   instances: 1
   resource_pool: splunk_z1
   networks:

@@ -2,5 +2,5 @@
 blobstore:
   provider: local
   options:
-    blobstore_path: /tmp/splunk-blobs
-final_name: splunk
+    blobstore_path: /tmp/cf-splunk-blobs
+final_name: cf-splunk
