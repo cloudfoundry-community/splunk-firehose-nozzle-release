@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 RUN_DIR=/var/vcap/sys/run/splunk-forwarder
 LOG_DIR=/var/vcap/sys/log/splunk-forwarder
 JOB_DIR=/var/vcap/jobs/splunk-forwarder
@@ -31,11 +34,6 @@ case $1 in
     rm -f $PIDFILE
 
     ;;
-
-  restart)
-    exec chpst -u vcap:vcap /var/vcap/packages/splunk/bin/splunk restart\
-      >>  $LOG_DIR/forwarder.stdout.log \
-      2>> $LOG_DIR/forwarder.stderr.log
 
   *)
     echo "Usage: ctl {start|stop|restart}" ;;
