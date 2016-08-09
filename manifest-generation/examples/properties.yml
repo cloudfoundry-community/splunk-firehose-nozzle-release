@@ -3,3 +3,11 @@ properties:
     indexer_host: 192.168.50.1
     indexer_port: 9997
     hec_token: 46D19381-22DF-497F-A6E8-F88F12079823
+
+    uaa_url: https://uaa.bosh-lite.com
+    uaa_username: splunk-firehose-nozzle
+    uaa_secret: password123
+    traffic_controller_url: wss://doppler.bosh-lite.com:4443
+    insecure_skip_verify: true
+    selected_events: ValueMetric,CounterEvent,Error,ContainerMetric
+    firehose_subscription_id: splunk-firehose-subscription

@@ -30,9 +30,11 @@ networks:
     subnets: (( iaas_settings.subnet_configs.splunk_z1.subnets ))
 
 jobs:
-- name: splunk_z1
+- name: splunk-forwarder
   templates:
     - name: splunk-forwarder
+      release: cf-splunk
+    - name: splunk-nozzle
       release: cf-splunk
   instances: 1
   resource_pool: splunk_z1

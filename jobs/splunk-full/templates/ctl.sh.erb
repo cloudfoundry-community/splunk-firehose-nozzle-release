@@ -18,7 +18,7 @@ case $1 in
 
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
-    exec chpst -u vcap:vcap /var/vcap/packages/splunk/bin/splunk start --accept-license \
+    exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license \
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log
 
@@ -31,6 +31,6 @@ case $1 in
     ;;
 
   *)
-    echo "Usage: ctl {start|stop}" ;;
+    echo "Usage: ctl.sh {start|stop}" ;;
 
 esac

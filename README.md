@@ -11,8 +11,15 @@ bosh upload stemcell ~/Desktop/bosh/bosh-stemcell-XXXX.X-warden-boshlite-ubuntu-
 ```
 * Get the Splunk bits
 ```
-wget http://download.splunk.com/products/splunk/releases/6.4.2/linux/splunk-6.4.2-00f5bb3fa822-Linux-x86_64.tgz -O ~/Downloads/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz
+wget http://download.splunk.com/products/splunk/releases/6.4.2/linux/splunk-6.4.2-00f5bb3fa822-Linux-x86_64.tgz \
+    -O ~/Downloads/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz
 bosh add blob ~/Downloads/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz splunk_6.4.2
+```
+* Get the [Golang bits](https://golang.org/dl/)
+```
+wget https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz \
+    -O ~/Downloads/go1.6.3.linux-amd64.tar.gz
+bosh add blob ~/Downloads/go1.6.3.linux-amd64.tar.gz golang
 ```
 * Generate a deployment manifest
     * Copy `./manifest-generator/examples/properties` to `./my-properties.yml`

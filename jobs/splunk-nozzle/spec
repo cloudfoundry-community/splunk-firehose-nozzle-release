@@ -1,0 +1,27 @@
+---
+
+name: splunk-nozzle
+templates:
+  ctl.sh.erb: bin/ctl.sh
+
+packages:
+- splunk-firehose-nozzle
+
+properties:
+  cf_splunk:
+    uaa_url:
+      description: The value of key "token_endpoint" in "cf curl /v2/info"
+    uaa_username:
+      description: Name of a uaa client having doppler.firehose scope
+    uaa_secret:
+      description: Secret assocated with uaa_username
+    traffic_controller_url:
+      description: The value of key "logging_endpoint" in "cf curl /v2/info"
+    firehose_subscription_id:
+      description: Unique identified for nozzle. Only need to change if splunk-firehose-nozzle-releases are deployed
+      default: splunk-firehose-subscription
+    insecure_skip_verify:
+      description: Skip ssl validation (for self signed certs)
+    selected_events:
+      description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
+      default: ValueMetric,CounterEvent,Error,ContainerMetric
