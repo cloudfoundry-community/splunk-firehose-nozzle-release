@@ -1,5 +1,5 @@
 ---
-name: splunk-firehose-nozzle
+name: splunk-nozzle
 
 dependencies:
   - golang
