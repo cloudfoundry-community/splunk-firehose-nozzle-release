@@ -3,6 +3,7 @@
 name: splunk-forwarder
 templates:
   ctl.sh.erb: bin/ctl.sh
+  system_web.conf.erb: config/system_local/web.conf
   system_outputs.conf.erb: config/system_local/outputs.conf
   system_inputs.conf.erb: config/system_local/inputs.conf
   system_user-seed.conf.erb: config/system_local/user-seed.conf
