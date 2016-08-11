@@ -14,6 +14,7 @@ case $1 in
   start)
     mkdir -p ${RUN_DIR} ${LOG_DIR}
     mkdir -p ${PACKAGE_DIR}/etc/system/local
+    mkdir -p ${PACKAGE_DIR}/etc/apps/SplunkForwarder/local
     mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local
 
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
@@ -21,6 +22,7 @@ case $1 in
     echo $$ > ${PIDFILE}
 
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
+    ln -fs ${JOB_DIR}/config/apps_splunkforwarder_local/* ${PACKAGE_DIR}/etc/apps/SplunkForwarder/local/
     ln -fs ${JOB_DIR}/config/apps_splunk_httpinput_local/* ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
 
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license  --no-prompt --answer-yes\
