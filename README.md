@@ -21,12 +21,20 @@ wget https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz \
     -O ~/Downloads/go1.6.3.linux-amd64.tar.gz
 bosh add blob ~/Downloads/go1.6.3.linux-amd64.tar.gz golang
 ```
+
+* Pull latest submodules, namely `src/splunk-firehose-nozzle`
+```
+git submodule update --init --recursive
+```
+
 * Generate a deployment manifest
-    * Copy `./manifest-generator/examples/properties` to `./my-properties.yml`
-    * Customize `./my-properties.yml` to your environment
+    * Copy `./manifest-generator/examples/properties` to `./properties.yml`
+    * Customize `./properties.yml` to your environment
     * Generate the manifest ``./scripts/generate-bosh-lite-manifest.sh `bosh status --uuid` properties.yml``
+
 * Iterating
 ```
+git submodule update src/splunk-firehose-nozzle # If submodule changed
 bosh create release --force
 bosh upload release dev_releases/cf-splunk/`ls -rt dev_releases/cf-splunk/ | grep "cf" | tail -n1`
 bosh deploy --recreate
