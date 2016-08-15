@@ -47,6 +47,42 @@ forms:
     label: HEC Token
     description: Credentials for talking to the HTTP event collector
 
+- name: cf-config
+  label: Cloud Foundry
+  description: Cloud Foundry installation details
+  properties:
+  - name: uaa_url
+    type: string
+    label: UAA url
+    description: /v2/info -> "token_endpoint"
+  - name: uaa_username
+    type: string
+    label: UAA username
+    description: UAA user with doppler.firehose scope
+  - name: uaa_secret
+    type: string
+    label: UAA secret
+    description: Secret corresponding to UAA username
+  - name: traffic_controller_url
+    type: string
+    label: Traffic controller url
+    description: /v2/info -> "logging_endpoint"
+  - name: insecure_skip_verify
+    type: boolean
+    label: Insecure skip verify
+    default: false
+    description: Skip SSL validation (to allow things like self-signed certs). Do not set to true in production.
+  - name: selected_events
+    type: string
+    label: Selected events
+    default: ValueMetric,CounterEvent,Error,ContainerMetric
+    description: Comma separated list of events to include from HttpStartStop,LogMessage,ValueMetric,CounterEvent,Error,ContainerMetric
+  - name: firehose_subscription_id
+    type: string
+    label: Firehose subscription id
+    default: splunk-firehose-subscription-id
+    description: Subscription-id unique to nozzle; firehose balances across sockets having same id. Default should be fine.
+
 packages:
 - name: app1
   type: app
@@ -57,11 +93,13 @@ packages:
 
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/cf-splunk-0+dev.3.tgz
+  path: resources/cf-splunk-0+dev.18.tgz
   jobs:
   - name: splunk-forwarder
     templates:
     - name: splunk-forwarder
+      release: cf-splunk
+    - name: splunk-nozzle
       release: cf-splunk
     memory: 512
     ephemeral_disk: 4096
@@ -74,3 +112,11 @@ packages:
         indexer_host: (( .properties.indexer_host.value ))
         indexer_port: (( .properties.indexer_port.value ))
         hec_token: (( .properties.hec_token.value ))
+
+        uaa_url: (( .properties.uaa_url.value ))
+        uaa_username: (( .properties.uaa_username.value ))
+        uaa_secret: (( .properties.uaa_secret.value ))
+        traffic_controller_url: (( .properties.traffic_controller_url.value ))
+        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
+        selected_events: (( .properties.selected_events.value ))
+        firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
