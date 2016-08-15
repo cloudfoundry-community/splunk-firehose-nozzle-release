@@ -21,7 +21,7 @@ case $1 in
     export NOZZLE_SELECTED_EVENTS=<%= p('cf_splunk.selected_events') %>
 
     export NOZZLE_SPLUNK_TOKEN=<%= p('cf_splunk.hec_token') %>
-    export NOZZLE_SPLUNK_HOST=https://localhost:8088
+    export NOZZLE_SPLUNK_HOST=http://localhost:8088
 
     mkdir -p ${RUN_DIR} ${LOG_DIR}
 
