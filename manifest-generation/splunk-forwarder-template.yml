@@ -40,7 +40,6 @@ jobs:
   resource_pool: splunk_z1
   networks:
   - name: splunk_z1
-    static_ips: (( static_ips(0) ))
 
 resource_pools:
 - name: splunk_z1
