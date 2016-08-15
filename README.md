@@ -34,7 +34,8 @@ git submodule update --init --recursive
 
 * Iterating
 ```
-git submodule update src/splunk-firehose-nozzle # If submodule changed
+git submodule update src/splunk-firehose-nozzle # If submodule changed upstream
+cd src/splunk-firehose-nozzle; git pull origin HEAD; cd ../.. # If submodule changed by you
 bosh create release --force
 bosh upload release dev_releases/cf-splunk/`ls -rt dev_releases/cf-splunk/ | grep "cf" | tail -n1`
 bosh deploy --recreate
@@ -55,6 +56,6 @@ tile build
 
 ## jobs
 
-* `splunk-forwarder`: bosh managed HTTP event collector co-located with a universal forwarder
-* `splunk-full`: bosh managed search head and indexer. Intended for internal testing only (not 
+* `splunk-forwarder`: bosh managed Splunk heavy forwarder with HTTP event collector co-located with a streaming splunk-nozzle
+* `splunk-full`: bosh managed Splunk search head and indexer. Intended for internal testing only (not 
 HA and doesn't persist past rebuilds)
