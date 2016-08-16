@@ -42,8 +42,7 @@ bosh deploy --recreate
 ```
 
 ## Creating a Tile
-Checkout the `bosh-release` branch of
-[tile-generator](https://github.com/cf-platform-eng/tile-generator)
+Checkout [tile-generator](https://github.com/cf-platform-eng/tile-generator)
 and make sure `tile-generator/bin` is in `$PATH`
 
 ```
