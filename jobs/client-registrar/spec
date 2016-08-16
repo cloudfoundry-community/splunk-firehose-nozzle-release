@@ -1,0 +1,7 @@
+---
+name: client-registrar
+packages:
+- cf-uaac
+templates:
+  errand.sh.erb: bin/run
+properties: {}

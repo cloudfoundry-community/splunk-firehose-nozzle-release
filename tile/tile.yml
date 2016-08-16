@@ -107,12 +107,14 @@ packages:
     static_ip: 1
     properties:
       cf_splunk:
+        # shared properties
+        hec_token: (( .properties.hec_token.value ))
+        # forwarder job properties
         admin_user: (( .properties.splunk_admin_user.value ))
         admin_pass: (( .properties.splunk_admin_pass.value ))
         indexer_host: (( .properties.indexer_host.value ))
         indexer_port: (( .properties.indexer_port.value ))
-        hec_token: (( .properties.hec_token.value ))
-
+        # nozzle job properties
         uaa_url: (( .properties.uaa_url.value ))
         uaa_username: (( .properties.uaa_username.value ))
         uaa_secret: (( .properties.uaa_secret.value ))

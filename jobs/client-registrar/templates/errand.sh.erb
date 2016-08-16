@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -ex
+
+echo "---------------------------Running errand"
+
+export PATH=/var/vcap/packages/ruby/bin:$PATH
+
+echo "Ruby version:"
+ruby --version
+
+echo "Bundlr version:"
+bundle --version
+
+echo "UAA client"
+uaac --version

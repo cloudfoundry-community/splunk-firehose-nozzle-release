@@ -1,0 +1,14 @@
+set -ex
+
+echo "packaging uaac"
+
+ruby --version
+
+gem --version
+
+ls
+
+cd cf-uaac
+
+bundle install
+

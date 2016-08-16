@@ -25,3 +25,5 @@ properties:
     selected_events:
       description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
       default: ValueMetric,CounterEvent,Error,ContainerMetric
+    hec_token:
+      description: Credentials for talking to the HTTP event collector
