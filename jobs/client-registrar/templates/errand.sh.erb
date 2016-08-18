@@ -1,16 +1,14 @@
 #!/bin/bash
 
-set -ex
+set -e
 
-echo "---------------------------Running errand"
-
+sudo -u vcap bash << EOF
 export PATH=/var/vcap/packages/ruby/bin:$PATH
 
-echo "Ruby version:"
-ruby --version
+cd /var/vcap/packages/cf-uaac/cf-uaac
 
-echo "Bundlr version:"
-bundle --version
+# todo: make skip-ssl-validation configurable
+bundle exec uaac target <%= p('cf_splunk.uaa_url') %> --skip-ssl-validation
+bundle exec uaac token client get admin -s <%= p('cf_splunk.uaa_admin_secret') %>
 
-echo "UAA client"
-uaac --version
+EOF

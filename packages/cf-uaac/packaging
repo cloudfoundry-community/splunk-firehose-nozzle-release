@@ -1,14 +1,6 @@
-set -ex
+set -e
 
-echo "packaging uaac"
+mv cf-uaac ${BOSH_INSTALL_TARGET}/
 
-ruby --version
-
-gem --version
-
-ls
-
-cd cf-uaac
-
-bundle install
-
+cd ${BOSH_INSTALL_TARGET}/cf-uaac
+/var/vcap/packages/ruby/bin/bundle install --deployment --without=development

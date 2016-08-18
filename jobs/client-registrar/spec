@@ -2,6 +2,16 @@
 name: client-registrar
 packages:
 - cf-uaac
+- ruby
 templates:
   errand.sh.erb: bin/run
-properties: {}
+properties:
+  cf_splunk:
+    uaa_url:
+      description: The value of key "token_endpoint" in "cf curl /v2/info"
+    uaa_admin_secret:
+      description: Secret assocated with uaa admin user
+    uaa_username:
+      description: uaa client to create for firehose nozzle
+    uaa_secret:
+      description: Secret assocated with uaa_username
