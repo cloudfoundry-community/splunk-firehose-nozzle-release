@@ -41,8 +41,21 @@ jobs:
   networks:
   - name: splunk_z1
 
+- name: client-registrar
+  template: client-registrar
+  release: cf-splunk
+  instances: 1
+  resource_pool: errands_z1
+  lifecycle: errand
+  networks:
+  - name: splunk_z1
+
 resource_pools:
 - name: splunk_z1
   network: splunk_z1
   stemcell: (( iaas_settings.stemcell ))
   cloud_properties: (( iaas_settings.resource_pool_cloud_properties.splunk_z1.cloud_properties ))
+- name: errands_z1
+  network: splunk_z1
+  stemcell: (( iaas_settings.stemcell ))
+  cloud_properties: (( iaas_settings.resource_pool_cloud_properties.errands_z1.cloud_properties ))

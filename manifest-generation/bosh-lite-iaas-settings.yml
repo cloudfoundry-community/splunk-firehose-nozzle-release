@@ -12,6 +12,8 @@ iaas_settings:
   resource_pool_cloud_properties:
   - name: splunk_z1
     cloud_properties: {}
+  - name: errands_z1
+    cloud_properties: {}
 
   subnet_configs:
   - name: splunk_z1
