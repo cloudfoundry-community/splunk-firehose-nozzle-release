@@ -2,13 +2,4 @@
 
 set -e
 
-sudo -u vcap bash << EOF
-export PATH=/var/vcap/packages/ruby/bin:$PATH
-
-cd /var/vcap/packages/cf-uaac/cf-uaac
-
-# todo: make skip-ssl-validation configurable
-bundle exec uaac target <%= p('cf_splunk.uaa_url') %> --skip-ssl-validation
-bundle exec uaac token client get admin -s <%= p('cf_splunk.uaa_admin_secret') %>
-
-EOF
+sudo -u vcap /var/vcap/jobs/client-registrar/bin/register.sh

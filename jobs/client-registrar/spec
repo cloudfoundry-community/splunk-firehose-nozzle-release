@@ -5,6 +5,7 @@ packages:
 - ruby
 templates:
   errand.sh.erb: bin/run
+  register.sh.erb: bin/register.sh
 properties:
   cf_splunk:
     uaa_url:
@@ -15,3 +16,6 @@ properties:
       description: uaa client to create for firehose nozzle
     uaa_secret:
       description: Secret assocated with uaa_username
+    insecure_skip_verify:
+      description: Skip ssl validation (for self signed certs)
+      default: false

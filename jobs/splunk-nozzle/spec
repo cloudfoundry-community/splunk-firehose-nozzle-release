@@ -22,6 +22,7 @@ properties:
       default: splunk-firehose-subscription
     insecure_skip_verify:
       description: Skip ssl validation (for self signed certs)
+      default: false
     selected_events:
       description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
       default: ValueMetric,CounterEvent,Error,ContainerMetric
