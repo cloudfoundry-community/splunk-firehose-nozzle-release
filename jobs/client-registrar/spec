@@ -8,6 +8,9 @@ templates:
   register.sh.erb: bin/register.sh
 properties:
   cf_splunk:
+    insecure_skip_verify:
+      description: Skip ssl validation (for self signed certs)
+      default: false
     uaa_url:
       description: The value of key "token_endpoint" in "cf curl /v2/info"
     uaa_admin_secret:
@@ -16,6 +19,3 @@ properties:
       description: uaa client to create for firehose nozzle
     uaa_secret:
       description: Secret assocated with uaa_username
-    insecure_skip_verify:
-      description: Skip ssl validation (for self signed certs)
-      default: false

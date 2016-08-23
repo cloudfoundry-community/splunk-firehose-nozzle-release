@@ -51,14 +51,10 @@ forms:
   label: Cloud Foundry
   description: Cloud Foundry installation details
   properties:
-  - name: uaa_url
-    type: string
-    label: UAA url
-    description: /v2/info -> "token_endpoint"
   - name: uaa_username
     type: string
     label: UAA username
-    description: UAA user with doppler.firehose scope
+    description: UAA user to register with doppler.firehose scope
   - name: uaa_secret
     type: string
     label: UAA secret
@@ -93,7 +89,7 @@ packages:
 
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/cf-splunk-0+dev.18.tgz
+  path: resources/cf-splunk-0+dev.85.tgz
   jobs:
   - name: splunk-forwarder
     templates:
@@ -104,21 +100,42 @@ packages:
     memory: 512
     ephemeral_disk: 4096
     cpu: 2
+    dynamic_ip: 0
     static_ip: 1
     properties:
       cf_splunk:
         # shared properties
         hec_token: (( .properties.hec_token.value ))
+        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
+        uaa_username: (( .properties.uaa_username.value ))
+        uaa_secret: (( .properties.uaa_secret.value ))
+        uaa_url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
         # forwarder job properties
         admin_user: (( .properties.splunk_admin_user.value ))
         admin_pass: (( .properties.splunk_admin_pass.value ))
         indexer_host: (( .properties.indexer_host.value ))
         indexer_port: (( .properties.indexer_port.value ))
         # nozzle job properties
-        uaa_url: (( .properties.uaa_url.value ))
-        uaa_username: (( .properties.uaa_username.value ))
-        uaa_secret: (( .properties.uaa_secret.value ))
         traffic_controller_url: (( .properties.traffic_controller_url.value ))
-        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
         selected_events: (( .properties.selected_events.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
+  - name: client-registrar
+    templates:
+      - name: client-registrar
+        release: cf-splunk
+    lifecycle: errand
+    post_deploy: true
+    memory: 512
+    ephemeral_disk: 4096
+    cpu: 1
+    dynamic_ip: 1
+    static_ip: 0
+    properties:
+      cf_splunk:
+        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
+        uaa_admin_secret: (( ..cf.uaa.admin_client_credentials.password ))
+        # todo: make this actually get passed down
+        uaa_admin_user: (( ..cf.uaa.admin_client_credentials.identity ))
+        uaa_username: (( .properties.uaa_username.value ))
+        uaa_secret: (( .properties.uaa_secret.value ))
+        uaa_url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
