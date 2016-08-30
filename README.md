@@ -48,8 +48,8 @@ git submodule update --init --recursive
 
 * Iterating
 ```
-git submodule update src/splunk-firehose-nozzle # If submodule changed upstream
-cd src/splunk-firehose-nozzle; git pull origin HEAD; cd ../.. # If submodule changed by you
+git submodule update src/splunk-firehose-nozzle        # If submodule changed upstream
+(cd src/splunk-firehose-nozzle; git pull origin HEAD)  # To get new splunk-firehose-nozzle changes
 bosh create release --force
 bosh upload release dev_releases/cf-splunk/`ls -rt dev_releases/cf-splunk/ | grep "cf" | tail -n1`
 bosh deploy --recreate

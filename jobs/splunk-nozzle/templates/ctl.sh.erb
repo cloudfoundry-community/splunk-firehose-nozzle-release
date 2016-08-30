@@ -4,6 +4,7 @@ set -ex
 
 RUN_DIR=/var/vcap/sys/run/splunk-nozzle
 LOG_DIR=/var/vcap/sys/log/splunk-nozzle
+DATA_DIR=/var/vcap/data/splunk-nozzle
 #JOB_DIR=/var/vcap/jobs/splunk-nozzle
 PACKAGE_DIR=/var/vcap/packages/splunk-nozzle
 PIDFILE=${RUN_DIR}/pid
@@ -11,17 +12,29 @@ PIDFILE=${RUN_DIR}/pid
 case $1 in
 
   start)
+    mkdir -p ${DATA_DIR}
+    chown vcap:vcap ${DATA_DIR}
 
-    export NOZZLE_UAA_URL=<%= p('cf_splunk.uaa_url') %>
-    export NOZZLE_USERNAME=<%= p('cf_splunk.uaa_username') %>
-    export NOZZLE_PASSWORD=<%= p('cf_splunk.uaa_secret') %>
-    export NOZZLE_TRAFFIC_CONTROLLER_URL=<%= p('cf_splunk.traffic_controller_url') %>
-    export NOZZLE_FIREHOSE_SUBSCRIPTION_ID=<%= p('cf_splunk.firehose_subscription_id') %>
-    export NOZZLE_INSECURE_SKIP_VERIFY=<%= p('cf_splunk.insecure_skip_verify') %>
-    export NOZZLE_SELECTED_EVENTS=<%= p('cf_splunk.selected_events') %>
+    export UAA_ENDPOINT=<%= p('cf_splunk.uaa_endpoint') %>
+    export FIREHOSE_UAA_USER=<%= p('cf_splunk.firehose_uaa_username') %>
+    export FIREHOSE_UAA_SECRET=<%= p('cf_splunk.firehose_uaa_secret') %>
+    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
-    export NOZZLE_SPLUNK_TOKEN=<%= p('cf_splunk.hec_token') %>
-    export NOZZLE_SPLUNK_HOST=http://localhost:8088
+    <% if properties.cf_splunk.add_app_info %>
+    export ADD_APP_INFO=true
+    export API_ENDPOINT=<%= p('cf_splunk.api_endoint') %>
+    export API_USER=<%= p('cf_splunk.api_user') %>
+    export API_PASSWORD=<%= p('cf_splunk.api_password') %>
+    export BOLTDB_PATH=${DATA_DIR}/cache.db
+    <% end %>
+
+    export DOPPLER_ENDPOINT=<%= p('cf_splunk.doppler_endpoint') %>
+    export EVENTS=<%= p('cf_splunk.events', 'ValueMetric,CounterEvent,Error,ContainerMetric') %>
+    export FIREHOSE_SUBSCRIPTION_ID=<%= p('cf_splunk.firehose_subscription_id', 'splunk-firehose-subscription') %>
+
+    export SPLUNK_TOKEN=<%= p('cf_splunk.splunk_token') %>
+    export SPLUNK_HOST=http://localhost:8088
+    export SPLUNK_INDEX=<%= p('cf_splunk.splunk_index') %>
 
     mkdir -p ${RUN_DIR} ${LOG_DIR}
 

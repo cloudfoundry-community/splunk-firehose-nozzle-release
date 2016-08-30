@@ -16,15 +16,15 @@ packages:
 properties:
   cf_splunk:
     admin_user:
-      default: admin
       description: Admin user name
+      default: admin
     admin_pass:
-      default: changeme
       description: Admin password
+      default: changeme
     indexer_host:
       description: Fully qualified hostname or ip address of indexer
     indexer_port:
-      default: 9997
       description: Port indexer accepts traffic on
-    hec_token:
+      default: 9997
+    splunk_token:
       description: Credentials for talking to the HTTP event collector
