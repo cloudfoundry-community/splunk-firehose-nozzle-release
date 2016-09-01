@@ -12,13 +12,14 @@ PIDFILE=${RUN_DIR}/pid
 case $1 in
 
   start)
-    mkdir -p ${DATA_DIR}
-    chown vcap:vcap ${DATA_DIR}
+    mkdir -p ${DATA_DIR} ${RUN_DIR} ${LOG_DIR}
+    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${DATA_DIR} ${PACKAGE_DIR}/
+
+    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
     export UAA_ENDPOINT=<%= p('cf_splunk.uaa_endpoint') %>
     export FIREHOSE_UAA_USER=<%= p('cf_splunk.firehose_uaa_username') %>
     export FIREHOSE_UAA_SECRET=<%= p('cf_splunk.firehose_uaa_secret') %>
-    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
     <% if properties.cf_splunk.add_app_info %>
     export ADD_APP_INFO=true
@@ -36,9 +37,6 @@ case $1 in
     export SPLUNK_HOST=http://localhost:8088
     export SPLUNK_INDEX=<%= p('cf_splunk.splunk_index') %>
 
-    mkdir -p ${RUN_DIR} ${LOG_DIR}
-
-    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
 
     #pid_guard $PIDFILE $JOB_NAME
 

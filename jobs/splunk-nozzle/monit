@@ -4,4 +4,4 @@ check process splunk-nozzle
   start program "/var/vcap/jobs/splunk-nozzle/bin/ctl.sh start"
   stop program "/var/vcap/jobs/splunk-nozzle/bin/ctl.sh stop"
   group vcap
-  depends on splunk-forwarder
+  # depends on splunk-forwarder, client-registrar

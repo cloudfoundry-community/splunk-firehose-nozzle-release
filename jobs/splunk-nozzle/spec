@@ -9,15 +9,16 @@ packages:
 
 properties:
   cf_splunk:
+    skip_ssl_validation:
+      description: Skip ssl validation (for self signed certs, useful in dev environments)
+      default: false
+
     uaa_endpoint:
       description: The value of key "token_endpoint" from /v2/info
     firehose_uaa_username:
       description: Name of a uaa client having doppler.firehose scope
     firehose_uaa_secret:
       description: Secret assocated with uaa_username
-    skip_ssl_validation:
-      description: Skip ssl validation (for self signed certs, useful in dev environments)
-      default: false
 
     add_app_info:
       description: When true, nozzle will query cloud controller to add name, space, org

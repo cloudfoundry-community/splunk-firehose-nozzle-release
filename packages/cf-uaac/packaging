@@ -1,6 +1,0 @@
-set -e
-
-mv cf-uaac ${BOSH_INSTALL_TARGET}/
-
-cd ${BOSH_INSTALL_TARGET}/cf-uaac
-/var/vcap/packages/ruby/bin/bundle install --deployment --without=development

@@ -21,20 +21,6 @@ wget https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz \
     -O ~/Downloads/go1.6.3.linux-amd64.tar.gz
 bosh add blob ~/Downloads/go1.6.3.linux-amd64.tar.gz golang
 ```
-* Get the Ruby bits
-```
-wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz \
-    -O ~/Downloads/ruby-2.3.1.tar.gz
-bosh add blob ~/Downloads/ruby-2.3.1.tar.gz ruby
-
-wget https://rubygems.org/rubygems/rubygems-2.6.6.tgz \
-    -O ~/Downloads/rubygems-2.6.6.tgz
-bosh add blob ~/Downloads/rubygems-2.6.6.tgz ruby
-
-wget https://rubygems.org/downloads/bundler-1.12.5.gem \
-    -O ~/Downloads/bundler-1.12.5.gem
-bosh add blob ~/Downloads/bundler-1.12.5.gem ruby
-```
 
 * Pull latest submodules, namely `src/splunk-firehose-nozzle`
 ```
