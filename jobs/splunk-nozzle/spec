@@ -5,6 +5,7 @@ templates:
   ctl.sh.erb: bin/ctl.sh
 
 packages:
+- common
 - splunk-nozzle
 
 properties:

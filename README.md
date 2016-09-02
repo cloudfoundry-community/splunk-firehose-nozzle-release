@@ -55,6 +55,9 @@ tile build
 
 ## jobs
 
-* `splunk-forwarder`: bosh managed Splunk heavy forwarder with HTTP event collector co-located with a streaming splunk-nozzle
+* `splunk-forwarder`: bosh managed Splunk heavy forwarder with HTTP event collector enabled
+* `spunk-nozzle`: Nozzle that drains firehose logs & forwards to HEC. Should be co-located with `splunk-forwarder` 
+* `client-registrar`: A job that uses a uaa admin to register firehose nozzle credentials, skippable if creating
+proper credentials outside of this deployment
 * `splunk-full`: bosh managed Splunk search head and indexer. Intended for internal testing only (not 
-HA and doesn't persist past rebuilds)
+HA, doesn't persist past rebuilds, etc)

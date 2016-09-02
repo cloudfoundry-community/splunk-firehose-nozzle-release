@@ -1,19 +1,24 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 RUN_DIR=/var/vcap/sys/run/splunk-nozzle
 LOG_DIR=/var/vcap/sys/log/splunk-nozzle
 DATA_DIR=/var/vcap/data/splunk-nozzle
-#JOB_DIR=/var/vcap/jobs/splunk-nozzle
-PACKAGE_DIR=/var/vcap/packages/splunk-nozzle
 PIDFILE=${RUN_DIR}/pid
+
+PACKAGE_DIR=/var/vcap/packages/splunk-nozzle
+
+source /var/vcap/packages/common/pid_utils.sh
 
 case $1 in
 
   start)
     mkdir -p ${DATA_DIR} ${RUN_DIR} ${LOG_DIR}
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${DATA_DIR} ${PACKAGE_DIR}/
+
+    pid_guard $PIDFILE "client-registrar"
+    echo $$ > "${PIDFILE}"
 
     export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
@@ -37,11 +42,6 @@ case $1 in
     export SPLUNK_HOST=http://localhost:8088
     export SPLUNK_INDEX=<%= p('cf_splunk.splunk_index') %>
 
-
-    #pid_guard $PIDFILE $JOB_NAME
-
-    echo $$ > ${PIDFILE}
-
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk-firehose-nozzle \
       >>  $LOG_DIR/splunk-nozzle.stdout.log \
       2>> $LOG_DIR/splunk-nozzle.stderr.log
@@ -49,8 +49,7 @@ case $1 in
     ;;
 
   stop)
-    /var/vcap/packages/splunk/bin/splunk stop
-    rm -f $PIDFILE
+    kill_and_wait "${PIDFILE}"
 
     ;;
 

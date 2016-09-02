@@ -1,5 +1,4 @@
 check process client-registrar
-  # todo not quite sure that pid file is correct, check ctl.sh
   with pidfile /var/vcap/sys/run/client-registrar/pid
   start program "/var/vcap/jobs/client-registrar/bin/ctl.sh start"
   stop program "/var/vcap/jobs/client-registrar/bin/ctl.sh stop"

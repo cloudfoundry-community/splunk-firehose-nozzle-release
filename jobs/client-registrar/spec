@@ -7,18 +7,14 @@ description: |
   work would need to happen *pre-install*.
 
 packages:
-- splunk-nozzle
 - common
+- splunk-nozzle
 
 templates:
   ctl.sh.erb: bin/ctl.sh
 
 properties:
   cf_splunk:
-    register_client:
-      description: When false, this job is a no-op & no other properties are required
-      default: false
-
     skip_ssl_validation:
       description: Skip ssl validation (for self signed certs, useful in dev environments)
       default: false
