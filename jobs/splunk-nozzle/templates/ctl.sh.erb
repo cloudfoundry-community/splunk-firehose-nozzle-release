@@ -21,6 +21,9 @@ case $1 in
     echo $$ > "${PIDFILE}"
 
     export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
+    export JOB_NAME=<%= spec.name %>
+    export JOB_INDEX=<%= spec.index %>
+    export JOB_HOST=<%= spec.address %>
 
     export UAA_ENDPOINT=<%= p('cf_splunk.uaa_endpoint') %>
     export FIREHOSE_UAA_USER=<%= p('cf_splunk.firehose_uaa_username') %>
