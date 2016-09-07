@@ -1,21 +1,33 @@
 ---
+
 name: client-registrar
+description: |
+  A job that uses a uaa admin to register firehose nozzle credentials.
+  This would be an errand except PCF only offers *post-install* errands and this
+  work would need to happen *pre-install*.
+
 packages:
-- cf-uaac
-- ruby
+- common
+- splunk-nozzle
+
 templates:
-  errand.sh.erb: bin/run
-  register.sh.erb: bin/register.sh
+  ctl.sh.erb: bin/ctl.sh
+
 properties:
   cf_splunk:
-    insecure_skip_verify:
-      description: Skip ssl validation (for self signed certs)
+    skip_ssl_validation:
+      description: Skip ssl validation (for self signed certs, useful in dev environments)
       default: false
-    uaa_url:
-      description: The value of key "token_endpoint" in "cf curl /v2/info"
-    uaa_admin_secret:
-      description: Secret assocated with uaa admin user
-    uaa_username:
-      description: uaa client to create for firehose nozzle
-    uaa_secret:
-      description: Secret assocated with uaa_username
+
+    uaa_endpoint:
+      description: The value of key "token_endpoint" from /v2/info
+
+    admin_uaa_username:
+      description: Uaa admin client
+    admin_uaa_secret:
+      description: Secret assocated with admin_uaa_username
+
+    firehose_uaa_username:
+      description: uaa client to create having doppler.firehose scope
+    firehose_uaa_secret:
+      description: Secret assocated with firehose_uaa_username

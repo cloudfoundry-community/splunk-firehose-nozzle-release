@@ -30,23 +30,16 @@ networks:
     subnets: (( iaas_settings.subnet_configs.splunk_z1.subnets ))
 
 jobs:
-- name: splunk-forwarder
+- name: splunk-nozzle
   templates:
     - name: splunk-forwarder
       release: cf-splunk
     - name: splunk-nozzle
       release: cf-splunk
+    - name: client-registrar
+      release: cf-splunk
   instances: 1
   resource_pool: splunk_z1
-  networks:
-  - name: splunk_z1
-
-- name: client-registrar
-  template: client-registrar
-  release: cf-splunk
-  instances: 1
-  resource_pool: errands_z1
-  lifecycle: errand
   networks:
   - name: splunk_z1
 
@@ -55,7 +48,3 @@ resource_pools:
   network: splunk_z1
   stemcell: (( iaas_settings.stemcell ))
   cloud_properties: (( iaas_settings.resource_pool_cloud_properties.splunk_z1.cloud_properties ))
-- name: errands_z1
-  network: splunk_z1
-  stemcell: (( iaas_settings.stemcell ))
-  cloud_properties: (( iaas_settings.resource_pool_cloud_properties.errands_z1.cloud_properties ))

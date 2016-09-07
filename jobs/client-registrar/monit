@@ -1,0 +1,5 @@
+check process client-registrar
+  with pidfile /var/vcap/sys/run/client-registrar/pid
+  start program "/var/vcap/jobs/client-registrar/bin/ctl.sh start"
+  stop program "/var/vcap/jobs/client-registrar/bin/ctl.sh stop"
+  group vcap

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+RUN_DIR=/var/vcap/sys/run/client-registrar
+LOG_DIR=/var/vcap/sys/log/client-registrar
+PIDFILE=${RUN_DIR}/pid
+
+PACKAGE_DIR=/var/vcap/packages/splunk-nozzle
+
+source /var/vcap/packages/common/pid_utils.sh
+
+case $1 in
+
+  start)
+    mkdir -p ${RUN_DIR} ${LOG_DIR}
+    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${DATA_DIR} ${PACKAGE_DIR}/
+
+    pid_guard $PIDFILE "client-registrar"
+    echo $$ > "${PIDFILE}"
+
+    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
+
+    export UAA_ENDPOINT=<%= p('cf_splunk.uaa_endpoint') %>
+
+    export FIREHOSE_UAA_USER=<%= p('cf_splunk.firehose_uaa_username') %>
+    export FIREHOSE_UAA_SECRET=<%= p('cf_splunk.firehose_uaa_secret') %>
+
+    export ADMIN_UAA_USER=<%= p('cf_splunk.admin_uaa_username') %>
+    export ADMIN_UAA_SECRET=<%= p('cf_splunk.admin_uaa_secret') %>
+
+    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
+
+    chpst -u vcap:vcap ${PACKAGE_DIR}/bin/provision \
+      >>  $LOG_DIR/client-registrar.stdout.log \
+      2>> $LOG_DIR/client-registrar.stderr.log
+
+    sleep infinity
+
+    ;;
+
+  stop)
+    kill_and_wait "${PIDFILE}"
+
+    ;;
+
+  *)
+    echo "Usage: ctl.sh {start|stop}" ;;
+
+esac

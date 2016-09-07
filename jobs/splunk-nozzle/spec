@@ -5,26 +5,42 @@ templates:
   ctl.sh.erb: bin/ctl.sh
 
 packages:
+- common
 - splunk-nozzle
 
 properties:
   cf_splunk:
-    uaa_url:
-      description: The value of key "token_endpoint" in "cf curl /v2/info"
-    uaa_username:
+    skip_ssl_validation:
+      description: Skip ssl validation (for self signed certs, useful in dev environments)
+      default: false
+
+    uaa_endpoint:
+      description: The value of key "token_endpoint" from /v2/info
+    firehose_uaa_username:
       description: Name of a uaa client having doppler.firehose scope
-    uaa_secret:
+    firehose_uaa_secret:
       description: Secret assocated with uaa_username
-    traffic_controller_url:
-      description: The value of key "logging_endpoint" in "cf curl /v2/info"
+
+    add_app_info:
+      description: When true, nozzle will query cloud controller to add name, space, org
+      default: false
+    api_endoint:
+      description: CF api for adding app info
+    api_user:
+      description: User to authenticate against cf API (needs cloud_controller.admin or cloud_controller.admin_read_only)
+    api_password:
+      description: Password for cf_splunk.firehose_user
+
+    doppler_endpoint:
+      description: The value of key "logging_endpoint" from /v2/info
+    events:
+      description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
+      default: ValueMetric,CounterEvent,Error,ContainerMetric
     firehose_subscription_id:
       description: Unique identified for nozzle. Only need to change if splunk-firehose-nozzle-releases are deployed
       default: splunk-firehose-subscription
-    insecure_skip_verify:
-      description: Skip ssl validation (for self signed certs)
-      default: false
-    selected_events:
-      description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
-      default: ValueMetric,CounterEvent,Error,ContainerMetric
-    hec_token:
+
+    splunk_token:
       description: Credentials for talking to the HTTP event collector
+    splunk_index:
+      description: Splunk index
