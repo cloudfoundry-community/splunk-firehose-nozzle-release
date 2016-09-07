@@ -49,7 +49,6 @@ and make sure `tile-generator/bin` is in `$PATH`
 bosh create release --force --with-tarball
 mv dev_releases/cf-splunk/*.tgz tile/resources/
 (cd tile; tile build)
-(cd tile; ./tile_custom.sh)
 ```
 
 ## jobs

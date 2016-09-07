@@ -26,26 +26,25 @@ forms:
   label: Splunk
   description: Custom Properties for Splunk
   properties:
-  - name: splunk_admin_user
-    type: string
-    label: Admin user
-    description: Admin user name (internal to Splunk forwarder, only useful debugging)
-  - name: splunk_admin_pass
-    type: string
-    label: Admin password
-    description: Admin password
   - name: indexer_host
     type: string
     label: Indexer host
     description: Fully qualified hostname or ip address of indexer
   - name: indexer_port
     type: integer
+    default: 9997
     label: Indexer port
     description: Port indexer accepts traffic on
-  - name: hec_token
+  - name: splunk_index
     type: string
-    label: HEC Token
-    description: Credentials for talking to the HTTP event collector
+    label: Index
+    description: Splunk index
+    default: main
+  - name: add_app_info
+    type: boolean
+    default: false
+    label: Add App Info
+    description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
 
 - name: cf-config
   label: Cloud Foundry
@@ -59,13 +58,13 @@ forms:
     type: string
     label: UAA secret
     description: Secret corresponding to UAA username
-  - name: traffic_controller_url
+  - name: doppler_logging_endpoint
     type: string
-    label: Traffic controller url
-    description: /v2/info -> "logging_endpoint"
-  - name: insecure_skip_verify
+    label: Doppler logging endpoint
+    description: /v2/info -> "doppler_logging_endpoint"
+  - name: skip_ssl_validation
     type: boolean
-    label: Insecure skip verify
+    label: Skip SSL validation
     default: false
     description: Skip SSL validation (to allow things like self-signed certs). Do not set to true in production.
   - name: selected_events
@@ -73,29 +72,44 @@ forms:
     label: Selected events
     default: ValueMetric,CounterEvent,Error,ContainerMetric
     description: Comma separated list of events to include from HttpStartStop,LogMessage,ValueMetric,CounterEvent,Error,ContainerMetric
+
+- name: advanced
+  label: Advanced
+  description: Properties that likely don't need changed
+  properties:
+  - name: splunk_admin_user
+    type: string
+    label: Admin user
+    default: admin
+    description: Admin user name (internal to Splunk forwarder, only useful debugging)
+  - name: splunk_admin_pass
+    type: string
+    label: Admin password
+    description: Admin user's password
+    default: AdminPass1
+  - name: token
+    type: string
+    label: HEC Token
+    description: Credentials for talking to the HTTP event collector (interal to Splunk forwarder, only useful for debugging)
+    default: Splunk-HEC-Token-1
   - name: firehose_subscription_id
     type: string
     label: Firehose subscription id
     default: splunk-firehose-subscription-id
-    description: Subscription-id unique to nozzle; firehose balances across sockets having same id. Default should be fine.
+    description: Subscription-id unique to nozzle; firehose balances across socket connections having same id.
 
 packages:
-- name: app1
-  type: app
-  manifest:
-    path: resources/app.zip
-    command: python app.py
-    memory: 256M
-
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/cf-splunk-0+dev.85.tgz
+  path: resources/cf-splunk-0+dev.122.tgz
   jobs:
-  - name: splunk-forwarder
+  - name: splunk-nozzle
     templates:
     - name: splunk-forwarder
       release: cf-splunk
     - name: splunk-nozzle
+      release: cf-splunk
+    - name: client-registrar
       release: cf-splunk
     memory: 512
     ephemeral_disk: 4096
@@ -105,37 +119,24 @@ packages:
     properties:
       cf_splunk:
         # shared properties
-        hec_token: (( .properties.hec_token.value ))
-        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
-        uaa_username: (( .properties.uaa_username.value ))
-        uaa_secret: (( .properties.uaa_secret.value ))
-        uaa_url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
-        # forwarder job properties
-        admin_user: (( .properties.splunk_admin_user.value ))
-        admin_pass: (( .properties.splunk_admin_pass.value ))
+        uaa_endpoint: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+        firehose_uaa_username: (( .properties.uaa_username.value ))
+        firehose_uaa_secret: (( .properties.uaa_secret.value ))
+        skip_ssl_validation: (( .properties.skip_ssl_validation.value ))
+
+        admin_uaa_username: (( ..cf.uaa.admin_client_credentials.identity ))
+        admin_uaa_secret: (( ..cf.uaa.admin_client_credentials.password ))
+
+        add_app_info: (( .properties.add_app_info.value ))
+        api_endoint: https://api.(( ..cf.cloud_controller.system_domain.value ))
+        api_user: (( ..cf.uaa.admin_credentials.identity ))
+        api_password: (( ..cf.uaa.admin_credentials.password ))
+
+        doppler_endpoint: (( .properties.doppler_logging_endpoint.value ))
+        events: (( .properties.selected_events.value ))
+        firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
+
+        splunk_token: (( .properties.token.value ))
+        splunk_index: (( .properties.splunk_index.value ))
         indexer_host: (( .properties.indexer_host.value ))
         indexer_port: (( .properties.indexer_port.value ))
-        # nozzle job properties
-        traffic_controller_url: (( .properties.traffic_controller_url.value ))
-        selected_events: (( .properties.selected_events.value ))
-        firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
-  - name: client-registrar
-    templates:
-      - name: client-registrar
-        release: cf-splunk
-    lifecycle: errand
-    post_deploy: true
-    memory: 512
-    ephemeral_disk: 4096
-    cpu: 1
-    dynamic_ip: 1
-    static_ip: 0
-    properties:
-      cf_splunk:
-        insecure_skip_verify: (( .properties.insecure_skip_verify.value ))
-        uaa_admin_secret: (( ..cf.uaa.admin_client_credentials.password ))
-        # todo: make this actually get passed down
-        uaa_admin_user: (( ..cf.uaa.admin_client_credentials.identity ))
-        uaa_username: (( .properties.uaa_username.value ))
-        uaa_secret: (( .properties.uaa_secret.value ))
-        uaa_url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
