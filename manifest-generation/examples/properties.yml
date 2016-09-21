@@ -1,8 +1,5 @@
 properties:
   cf_splunk:
-    uaa_endpoint: https://uaa.bosh-lite.com
-    firehose_uaa_username: splunk-firehose-nozzle
-    firehose_uaa_secret: password123
     skip_ssl_validation: true
 
     admin_uaa_username: admin

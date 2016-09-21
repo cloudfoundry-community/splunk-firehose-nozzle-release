@@ -36,8 +36,6 @@ jobs:
       release: cf-splunk
     - name: splunk-nozzle
       release: cf-splunk
-    - name: client-registrar
-      release: cf-splunk
   instances: 1
   resource_pool: splunk_z1
   networks:

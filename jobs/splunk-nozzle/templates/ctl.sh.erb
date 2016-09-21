@@ -20,20 +20,17 @@ case $1 in
     pid_guard $PIDFILE "client-registrar"
     echo $$ > "${PIDFILE}"
 
-    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
     export JOB_NAME=<%= spec.name %>
     export JOB_INDEX=<%= spec.index %>
     export JOB_HOST=<%= spec.address %>
 
-    export UAA_ENDPOINT=<%= p('cf_splunk.uaa_endpoint') %>
-    export FIREHOSE_UAA_USER=<%= p('cf_splunk.firehose_uaa_username') %>
-    export FIREHOSE_UAA_SECRET=<%= p('cf_splunk.firehose_uaa_secret') %>
+    export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
-    <% if properties.cf_splunk.add_app_info %>
-    export ADD_APP_INFO=true
     export API_ENDPOINT=<%= p('cf_splunk.api_endoint') %>
     export API_USER=<%= p('cf_splunk.api_user') %>
     export API_PASSWORD=<%= p('cf_splunk.api_password') %>
+    <% if properties.cf_splunk.add_app_info %>
+    export ADD_APP_INFO=true
     export BOLTDB_PATH=${DATA_DIR}/cache.db
     <% end %>
 
