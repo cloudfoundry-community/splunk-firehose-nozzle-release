@@ -50,14 +50,6 @@ forms:
   label: Cloud Foundry
   description: Cloud Foundry installation details
   properties:
-  - name: uaa_username
-    type: string
-    label: UAA username
-    description: UAA user to register with doppler.firehose scope
-  - name: uaa_secret
-    type: string
-    label: UAA secret
-    description: Secret corresponding to UAA username
   - name: doppler_logging_endpoint
     type: string
     label: Doppler logging endpoint
@@ -101,15 +93,13 @@ forms:
 packages:
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/cf-splunk-0+dev.122.tgz
+  path: resources/cf-splunk-0+dev.126.tgz
   jobs:
   - name: splunk-nozzle
     templates:
     - name: splunk-forwarder
       release: cf-splunk
     - name: splunk-nozzle
-      release: cf-splunk
-    - name: client-registrar
       release: cf-splunk
     memory: 512
     ephemeral_disk: 4096
@@ -119,13 +109,7 @@ packages:
     properties:
       cf_splunk:
         # shared properties
-        uaa_endpoint: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
-        firehose_uaa_username: (( .properties.uaa_username.value ))
-        firehose_uaa_secret: (( .properties.uaa_secret.value ))
         skip_ssl_validation: (( .properties.skip_ssl_validation.value ))
-
-        admin_uaa_username: (( ..cf.uaa.admin_client_credentials.identity ))
-        admin_uaa_secret: (( ..cf.uaa.admin_client_credentials.password ))
 
         add_app_info: (( .properties.add_app_info.value ))
         api_endoint: https://api.(( ..cf.cloud_controller.system_domain.value ))

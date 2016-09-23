@@ -2,9 +2,6 @@ properties:
   cf_splunk:
     skip_ssl_validation: true
 
-    admin_uaa_username: admin
-    admin_uaa_secret: admin-secret
-
     add_app_info: false
     api_endoint: https://api.bosh-lite.com
     api_user: admin
