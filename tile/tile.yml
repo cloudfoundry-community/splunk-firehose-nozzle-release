@@ -93,7 +93,7 @@ forms:
 packages:
 - name: splunk-bosh-release
   type: bosh-release
-  path: resources/cf-splunk-0+dev.126.tgz
+  path: resources/cf-splunk-0+dev.129.tgz
   jobs:
   - name: splunk-nozzle
     templates:
