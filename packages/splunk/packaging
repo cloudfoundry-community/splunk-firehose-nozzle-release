@@ -1,6 +1,8 @@
 set -e
 
-tar xzf splunk_6.4.2/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz \
+cp splunk/splunk-version.txt ${BOSH_INSTALL_TARGET}
+
+tar xzf splunk/splunk-linux-x86_64.tgz \
     -C ${BOSH_INSTALL_TARGET} \
     --strip-components=1 \
     splunk

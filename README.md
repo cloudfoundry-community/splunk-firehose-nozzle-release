@@ -59,3 +59,7 @@ mv dev_releases/cf-splunk/*.tgz tile/resources/
 proper credentials outside of this deployment
 * `splunk-full`: bosh managed Splunk search head and indexer. Intended for internal testing only (not 
 HA, doesn't persist past rebuilds, etc)
+
+## CI
+
+https://ci.run-01.haas-26.pez.pivotal.io/pipelines/splunk-firehose-tile

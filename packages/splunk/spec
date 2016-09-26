@@ -4,4 +4,5 @@ name: splunk
 dependencies: []
 
 files:
-- splunk_6.4.2/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz
+  - splunk/splunk-linux-x86_64.tgz
+  - splunk/splunk-version.txt

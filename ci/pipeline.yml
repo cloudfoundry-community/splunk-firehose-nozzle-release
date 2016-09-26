@@ -1,0 +1,9 @@
+---
+
+resources:
+- name: firehose-repo
+  type: git
+  source:
+    branch: master
+    uri: git@github.com:cf-platform-eng/splunk-firehose-nozzle-release
+    private_key: {{github-deploy-key}}
