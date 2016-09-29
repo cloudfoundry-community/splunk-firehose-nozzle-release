@@ -37,7 +37,7 @@ resources:
 - name: tile-history
   type: s3
   source:
-    regexp: tile-history.yml
+    versioned_file: tile-history.yml
     bucket: {{s3-bucket}}
     access_key_id: {{s3-access-key}}
     secret_access_key: {{s3-secret}}
@@ -96,15 +96,13 @@ jobs:
   - put: splunk-release
     params:
       file: release/cf-splunk-*.tgz
-  - put: version
-    params:
-      bump: patch
 
 - name: build-tile
   plan:
   - aggregate:
     - get: nozzle-release-repo
     - get: tile-history
+    - get: version
     - get: splunk-release
       passed:
         - build-release
@@ -118,12 +116,34 @@ jobs:
           repository: guidowb/tile-pipeline
       inputs:
       - name: nozzle-release-repo
-      - name: version
+      - name: tile-history
+      - name: splunk-release
       outputs:
-        - name: release
+        - name: tile
       run:
         path: bash
         args:
         - -exc
         - |
-          ls -lah
+          cp tile-history/tile-history.yml nozzle-release-repo/tile
+          cp splunk-release/*.tgz nozzle-release-repo/tile/resources/
+          pushd nozzle-release-repo
+          ./scripts/build-tile.sh ../version/number
+          popd
+          mkdir -p tile
+          mv nozzle-release-repo/tile/product/*.pivotal tile
+  - put: splunk-tile
+    params:
+      file: tile/splunk-*.pivotal
+
+- name: bump-version
+  plan:
+  - aggregate:
+    - get: splunk-release
+      passed:
+        - build-tile
+      trigger: true
+    - get: version
+  - put: version
+    params:
+      bump: patch

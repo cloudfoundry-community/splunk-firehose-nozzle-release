@@ -2,6 +2,11 @@
 
 set -e
 
+if [ "$0" != "./scripts/build-release.sh" ]; then
+    echo "'build-release.sh' should be run from repository root"
+    exit 1
+fi
+
 function usage(){
   >&2 echo "
  Usage:
@@ -25,11 +30,6 @@ fi
 
 echo "Building splunk-firhose-nozzle-relese ${version}"
 echo ""
-
-if [ "$0" != "./scripts/build-release.sh" ]; then
-    echo "'build-release.sh' should be run from repository root"
-    exit 1
-fi
 
 echo "Cleaning up blobs"
 rm -rf .blobs/* blobs/*
