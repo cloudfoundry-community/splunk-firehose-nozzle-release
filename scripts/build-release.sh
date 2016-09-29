@@ -17,7 +17,9 @@ if [ "$#" -lt 1 ]; then
     usage
 fi
 
-echo "Building splunk-firhose-nozzle-relese"
+export version=$1
+
+echo "Building splunk-firhose-nozzle-relese ${version}"
 echo ""
 
 if [ "$0" != "./scripts/build-release.sh" ]; then
@@ -64,4 +66,4 @@ bosh add blob "${splunk_pkg_path}" splunk
 bosh add blob "${splunk_version_path}" splunk
 
 echo "Creating release"
-bosh create release --with-tarball --version $1 --force
+bosh create release --with-tarball --version "${version}" --force
