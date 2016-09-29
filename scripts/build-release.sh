@@ -17,7 +17,11 @@ if [ "$#" -lt 1 ]; then
     usage
 fi
 
-export version=$1
+if [ -e "$1" ]; then
+    export version=`cat $1`
+else
+    export version=$1
+fi
 
 echo "Building splunk-firhose-nozzle-relese ${version}"
 echo ""

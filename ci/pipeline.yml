@@ -36,3 +36,49 @@ jobs:
       - name: nozzle-release-repo
       run:
         path: nozzle-release-repo/ci/unit.sh
+
+- name: build-tile
+  plan:
+  - aggregate:
+    - get: nozzle-release-repo
+      passed:
+        - unit-tests
+      trigger: true
+    - get: version
+#  - task: foo
+#    config:
+#      platform: linux
+#      image_resource:
+#        type: docker-image
+#        source:
+#          repository: guidowb/tile-pipeline
+#      inputs:
+#      - name: nozzle-release-repo
+#      - name: version
+#      run:
+#        path: sh
+#        args:
+#        - -exc
+#        - |
+#          ls version
+#          echo "version/version"
+#          echo ""
+#          cat version/version
+#          echo "version/number"
+#          echo ""
+#          cat version/number
+  - task: build-release
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: guidowb/tile-pipeline
+      inputs:
+      - name: nozzle-release-repo
+      - name: version
+      run:
+        dir: nozzle-release-repo
+        path: ./scripts/build-release.sh
+        args:
+          - "../version/number"
