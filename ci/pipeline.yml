@@ -35,4 +35,4 @@ jobs:
       inputs:
       - name: nozzle-release-repo
       run:
-        path: nozzle-release-repo/src/splunk-firehose-nozzle/ci/scripts/unit.sh
+        path: nozzle-release-repo/ci/unit.sh
