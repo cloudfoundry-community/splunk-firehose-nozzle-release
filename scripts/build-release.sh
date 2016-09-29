@@ -59,9 +59,9 @@ if [ -a "${splunk_pkg_path}" ]; then
     echo "Splunk package already exist, skipping download"
 else
     echo "Splunk pagage doesn't exist, downloading"
-    wget "${splunk_pkg_remote}" -O "${splunk_version_path}"
+    wget "${splunk_pkg_remote}" -O "${splunk_pkg_path}"
 fi
-echo "${splunk_pkg_remote}" > "./tmp/splunk-version.txt"
+echo "${splunk_pkg_remote}" > "${splunk_version_path}"
 
 echo "Adding blobs"
 bosh add blob "${go_pkg_path}" golang

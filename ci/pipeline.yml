@@ -88,5 +88,9 @@ jobs:
         - -exc
         - |
           cd nozzle-release-repo
-          ./scripts/install.sh
+          ./ci/install.sh
           ./scripts/build-release.sh ../version/number
+          echo ""
+          echo ""
+          ls
+          ls dev_releases
