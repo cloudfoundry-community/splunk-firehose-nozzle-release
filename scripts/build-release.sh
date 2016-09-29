@@ -70,4 +70,4 @@ bosh add blob "${splunk_pkg_path}" splunk
 bosh add blob "${splunk_version_path}" splunk
 
 echo "Creating release"
-bosh create release --with-tarball --version "${version}" --force
+bosh create release --name cf-splunk --with-tarball --version "${version}" --force
