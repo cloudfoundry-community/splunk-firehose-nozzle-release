@@ -118,6 +118,7 @@ jobs:
       - name: nozzle-release-repo
       - name: tile-history
       - name: splunk-release
+      - name: version
       outputs:
         - name: tile
       run:

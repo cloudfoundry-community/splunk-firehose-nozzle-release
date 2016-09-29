@@ -37,7 +37,7 @@ import jinja2
 
 with open('tile.yml.jinja2', 'r') as template_file:
     template = template_file.read()
-    rendered = jinja2.Template(template).render(version=${version})
+    rendered = jinja2.Template(template).render(version='${version}')
     with open('tile.yml', 'w') as rendered_file:
         rendered_file.write(rendered)
 
