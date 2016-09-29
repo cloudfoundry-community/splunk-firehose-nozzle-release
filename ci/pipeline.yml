@@ -19,30 +19,30 @@ resources:
     secret_access_key: {{s3-secret}}
 
 jobs:
-- name: unit-tests
-  plan:
-  - aggregate:
-    - get: nozzle-release-repo
-      trigger: true
-  - task: run-deployment-tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-          tag: '1.7'
-      inputs:
-      - name: nozzle-release-repo
-      run:
-        path: nozzle-release-repo/ci/unit.sh
+#- name: unit-tests
+#  plan:
+#  - aggregate:
+#    - get: nozzle-release-repo
+#      trigger: true
+#  - task: run-deployment-tests
+#    config:
+#      platform: linux
+#      image_resource:
+#        type: docker-image
+#        source:
+#          repository: golang
+#          tag: '1.7'
+#      inputs:
+#      - name: nozzle-release-repo
+#      run:
+#        path: nozzle-release-repo/ci/unit.sh
 
 - name: build-tile
   plan:
   - aggregate:
     - get: nozzle-release-repo
-      passed:
-        - unit-tests
+#      passed:
+#        - unit-tests
       trigger: true
     - get: version
 #  - task: foo
@@ -77,8 +77,16 @@ jobs:
       inputs:
       - name: nozzle-release-repo
       - name: version
+#      run:
+#        dir: nozzle-release-repo
+#        path: ./scripts/build-release.sh
+#        args:
+#          - "../version/number"
       run:
-        dir: nozzle-release-repo
-        path: ./scripts/build-release.sh
+        path: sh
         args:
-          - "../version/number"
+        - -exc
+        - |
+          cd nozzle-release-repo
+          ./scripts/install.sh
+          ./scripts/build-release.sh ../version/number
