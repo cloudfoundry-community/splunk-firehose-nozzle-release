@@ -43,4 +43,6 @@ with open('tile.yml.jinja2', 'r') as template_file:
 
 "
 
+tile build
+
 popd
