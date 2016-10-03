@@ -95,8 +95,10 @@ jobs:
   plan:
   - aggregate:
     - get: tile-generator-repo
+    - get: pcf-environment
       passed:
       - deploy-tile
+      trigger: true
     - get: release-repo
   - task: run-deployment-tests
     config:
@@ -112,7 +114,7 @@ jobs:
       outputs:
       - name: log
       run:
-        path: release-repo/run-test-deploy.sh
+        path: release-repo/ci/run-test-deploy.sh
         args:
           - release-repo
           - pcf-environment
