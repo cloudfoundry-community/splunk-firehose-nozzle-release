@@ -1,7 +1,7 @@
 ---
 
 resources:
-- name: nozzle-release-repo
+- name: release-repo
   type: git
   source:
     branch: ci
@@ -42,12 +42,18 @@ resources:
     access_key_id: {{s3-access-key}}
     secret_access_key: {{s3-secret}}
 
+- name: tile-generator-repo
+  type: git
+  source:
+    ignore_paths: [ "sample" ]
+    branch: master
+    uri: http://github.com/cf-platform-eng/tile-generator.git
 
 jobs:
 - name: unit-tests
   plan:
   - aggregate:
-    - get: nozzle-release-repo
+    - get: release-repo
       trigger: true
   - task: run-deployment-tests
     config:
@@ -58,14 +64,14 @@ jobs:
           repository: golang
           tag: '1.7'
       inputs:
-      - name: nozzle-release-repo
+      - name: release-repo
       run:
-        path: nozzle-release-repo/ci/unit.sh
+        path: release-repo/ci/unit.sh
 
 - name: build-release
   plan:
   - aggregate:
-    - get: nozzle-release-repo
+    - get: release-repo
       passed:
         - unit-tests
       trigger: true
@@ -78,7 +84,7 @@ jobs:
         source:
           repository: guidowb/tile-pipeline
       inputs:
-      - name: nozzle-release-repo
+      - name: release-repo
       - name: version
       outputs:
         - name: release
@@ -87,12 +93,12 @@ jobs:
         args:
         - -exc
         - |
-          pushd nozzle-release-repo
+          pushd release-repo
           ./ci/install.sh
           ./scripts/build-release.sh ../version/number
           popd
           mkdir -p release
-          mv nozzle-release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
+          mv release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
   - put: splunk-release
     params:
       file: release/cf-splunk-*.tgz
@@ -100,7 +106,8 @@ jobs:
 - name: build-tile
   plan:
   - aggregate:
-    - get: nozzle-release-repo
+    - get: release-repo
+    - get: tile-generator-repo
     - get: tile-history
     - get: version
     - get: splunk-release
@@ -115,7 +122,8 @@ jobs:
         source:
           repository: guidowb/tile-pipeline
       inputs:
-      - name: nozzle-release-repo
+      - name: release-repo
+      - name: tile-generator-repo
       - name: tile-history
       - name: splunk-release
       - name: version
@@ -126,25 +134,50 @@ jobs:
         args:
         - -exc
         - |
-          cp tile-history/tile-history.yml nozzle-release-repo/tile
-          cp splunk-release/*.tgz nozzle-release-repo/tile/resources/
-          pushd nozzle-release-repo
+          export PATH=$PATH:`pwd`/tile-generator-repo/bin
+          cp tile-history/tile-history.yml release-repo/tile
+          cp splunk-release/*.tgz release-repo/tile/resources/
+          pushd release-repo
           ./scripts/build-tile.sh ../version/number
           popd
           mkdir -p tile
-          mv nozzle-release-repo/tile/product/*.pivotal tile
+          mv release-repo/tile/product/*.pivotal tile
   - put: splunk-tile
     params:
       file: tile/splunk-*.pivotal
 
-- name: bump-version
+- name: bump-patch-version
   plan:
   - aggregate:
+    - get: version
     - get: splunk-release
       passed:
         - build-tile
       trigger: true
+  - put: version
+    params:
+      bump: patch
+
+- name: manual-bump-patch-version
+  plan:
+  - aggregate:
     - get: version
   - put: version
     params:
       bump: patch
+
+- name: manual-bump-minor-version
+  plan:
+  - aggregate:
+    - get: version
+  - put: version
+    params:
+      bump: minor
+
+- name: manual-bump-major-version
+  plan:
+  - aggregate:
+    - get: version
+  - put: version
+    params:
+      bump: major
