@@ -76,9 +76,40 @@ jobs:
           - pcf-environment
     on_failure:
       aggregate:
-      - put: pcf-environment
-        params:
-          release: pcf-environment
+        - put: pcf-environment
+          params:
+            release: pcf-environment
+
+- name: test-deploy
+  plan:
+  - aggregate:
+    - get: tile-generator-repo
+      passed:
+      - deploy-tile
+    - get: release-repo
+  - task: run-deployment-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: guidowb/tile-pipeline
+      inputs:
+      - name: tile-generator-repo
+      - name: pcf-environment
+      - name: release-repo
+      outputs:
+      - name: log
+      run:
+        path: release-repo/run-test-deploy.sh
+        args:
+          - release-repo
+          - pcf-environment
+    on_failure:
+      aggregate:
+        - put: pcf-environment
+          params:
+            release: pcf-environment
 
 - name: remove-tile
   plan:
@@ -87,7 +118,7 @@ jobs:
     - get: release-repo
     - get: pcf-environment
       passed:
-        - deploy-tile
+        - test-deploy
       trigger: true
   - task: remove-tile
     config:
@@ -109,9 +140,9 @@ jobs:
           - pcf-environment
     on_failure:
       aggregate:
-      - put: pcf-environment
-        params:
-          release: pcf-environment
+        - put: pcf-environment
+          params:
+            release: pcf-environment
 
 - name: release-pcf
   plan:
