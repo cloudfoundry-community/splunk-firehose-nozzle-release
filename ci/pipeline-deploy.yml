@@ -20,7 +20,7 @@ resources:
 - name: release-repo
   type: git
   source:
-    branch: ci
+    branch: master
     uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
     username: cf-platform-eng-machine
     password: {{github-password}}
