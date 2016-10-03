@@ -9,6 +9,14 @@ resources:
     access_key_id: {{s3-access-key}}
     secret_access_key: {{s3-secret}}
 
+- name: missing-properties
+  type: s3
+  source:
+    bucket: {{s3-bucket}}
+    versioned_file: splunk-missing-properties.yml
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret}}
+
 - name: release-repo
   type: git
   source:
@@ -53,6 +61,7 @@ jobs:
       - claim-pcf
       trigger: true
     - get: release-repo
+    - get: missing-properties
   - task: run-deploy-tile
     config:
       platform: linux
@@ -65,6 +74,7 @@ jobs:
       - name: pcf-environment
       - name: splunk-tile
       - name: release-repo
+      - name: missing-properties
       outputs:
       - name: log
       run:
@@ -74,6 +84,7 @@ jobs:
           - release-repo
           - splunk-tile
           - pcf-environment
+          - missing-properties
     on_failure:
       aggregate:
         - put: pcf-environment
