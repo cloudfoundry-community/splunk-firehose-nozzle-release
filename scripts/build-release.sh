@@ -2,6 +2,11 @@
 
 set -e
 
+if [ "$0" != "./scripts/build-release.sh" ]; then
+    echo "'build-release.sh' should be run from repository root"
+    exit 1
+fi
+
 function usage(){
   >&2 echo "
  Usage:
@@ -17,13 +22,14 @@ if [ "$#" -lt 1 ]; then
     usage
 fi
 
-echo "Building splunk-firhose-nozzle-relese"
-echo ""
-
-if [ "$0" != "./scripts/build-release.sh" ]; then
-    echo "'build-release.sh' should be run from repository root"
-    exit 1
+if [ -e "$1" ]; then
+    export version=`cat $1`
+else
+    export version=$1
 fi
+
+echo "Building splunk-firhose-nozzle-relese ${version}"
+echo ""
 
 echo "Cleaning up blobs"
 rm -rf .blobs/* blobs/*
@@ -53,9 +59,9 @@ if [ -a "${splunk_pkg_path}" ]; then
     echo "Splunk package already exist, skipping download"
 else
     echo "Splunk pagage doesn't exist, downloading"
-    wget "${splunk_pkg_remote}" -O "${splunk_version_path}"
+    wget "${splunk_pkg_remote}" -O "${splunk_pkg_path}"
 fi
-echo "${splunk_pkg_remote}" > "./tmp/splunk-version.txt"
+echo "${splunk_pkg_remote}" > "${splunk_version_path}"
 
 echo "Adding blobs"
 bosh add blob "${go_pkg_path}" golang
@@ -64,4 +70,4 @@ bosh add blob "${splunk_pkg_path}" splunk
 bosh add blob "${splunk_version_path}" splunk
 
 echo "Creating release"
-bosh create release --with-tarball --version $1 --force
+bosh create release --name cf-splunk --with-tarball --version "${version}" --force

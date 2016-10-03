@@ -1,0 +1,189 @@
+---
+
+resources:
+- name: release-repo
+  type: git
+  source:
+    branch: ci
+    uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
+    username: cf-platform-eng-machine
+    password: {{github-password}}
+
+- name: version
+  type: semver
+  source:
+    driver: s3
+    bucket: {{s3-bucket}}
+    key: tile-version
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret}}
+
+- name: splunk-release
+  type: s3
+  source:
+    regexp: releases/cf-splunk.*-(?P<version>.*)\.tgz
+    bucket: {{s3-bucket}}
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret}}
+
+- name: splunk-tile
+  type: s3
+  source:
+    regexp: tiles/splunk.*-(?P<version>.*)\.pivotal
+    bucket: {{s3-bucket}}
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret}}
+
+- name: tile-history
+  type: s3
+  source:
+    versioned_file: tile-history.yml
+    bucket: {{s3-bucket}}
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret}}
+
+- name: tile-generator-repo
+  type: git
+  source:
+    ignore_paths: [ "sample" ]
+    branch: master
+    uri: http://github.com/cf-platform-eng/tile-generator.git
+
+jobs:
+- name: unit-tests
+  plan:
+  - aggregate:
+    - get: release-repo
+      trigger: true
+  - task: run-deployment-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+          tag: '1.7'
+      inputs:
+      - name: release-repo
+      run:
+        path: release-repo/ci/unit.sh
+
+- name: build-release
+  plan:
+  - aggregate:
+    - get: release-repo
+      passed:
+        - unit-tests
+      trigger: true
+    - get: version
+  - task: do-build-release
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: guidowb/tile-pipeline
+      inputs:
+      - name: release-repo
+      - name: version
+      outputs:
+        - name: release
+      run:
+        path: bash
+        args:
+        - -exc
+        - |
+          pushd release-repo
+          ./ci/install.sh
+          ./scripts/build-release.sh ../version/number
+          popd
+          mkdir -p release
+          mv release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
+  - put: splunk-release
+    params:
+      file: release/cf-splunk-*.tgz
+
+- name: build-tile
+  plan:
+  - aggregate:
+    - get: release-repo
+    - get: tile-generator-repo
+    - get: tile-history
+    - get: version
+    - get: splunk-release
+      passed:
+        - build-release
+      trigger: true
+  - task: do-build-tile
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: guidowb/tile-pipeline
+      inputs:
+      - name: release-repo
+      - name: tile-generator-repo
+      - name: tile-history
+      - name: splunk-release
+      - name: version
+      outputs:
+        - name: tile
+        - name: new-tile-history
+      run:
+        path: bash
+        args:
+        - -exc
+        - |
+          export PATH=$PATH:`pwd`/tile-generator-repo/bin
+          cp tile-history/tile-history.yml release-repo/tile
+          cp splunk-release/*.tgz release-repo/tile/resources/
+          pushd release-repo
+          ./scripts/build-tile.sh ../version/number
+          popd
+          mkdir -p tile
+          mv release-repo/tile/product/*.pivotal tile
+          mkdir -p new-tile-history
+          cp release-repo/tile/tile-history.yml new-tile-history
+  - put: splunk-tile
+    params:
+      file: tile/splunk-*.pivotal
+  - put: tile-history
+    params:
+      file: new-tile-history/tile-history.yml
+
+- name: bump-patch-version
+  plan:
+  - aggregate:
+    - get: version
+    - get: splunk-release
+      passed:
+        - build-tile
+      trigger: true
+  - put: version
+    params:
+      bump: patch
+
+- name: manual-bump-patch-version
+  plan:
+  - aggregate:
+    - get: version
+  - put: version
+    params:
+      bump: patch
+
+- name: manual-bump-minor-version
+  plan:
+  - aggregate:
+    - get: version
+  - put: version
+    params:
+      bump: minor
+
+- name: manual-bump-major-version
+  plan:
+  - aggregate:
+    - get: version
+  - put: version
+    params:
+      bump: major
