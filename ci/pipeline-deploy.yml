@@ -117,7 +117,7 @@ jobs:
   plan:
   - get: pcf-environment
     passed:
-    - claim-pcf
+    - remove-tile
     trigger: true
   - put: pcf-environment
     params:

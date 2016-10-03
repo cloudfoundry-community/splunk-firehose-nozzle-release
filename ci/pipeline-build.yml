@@ -129,6 +129,7 @@ jobs:
       - name: version
       outputs:
         - name: tile
+        - name: tile-history
       run:
         path: bash
         args:
@@ -142,9 +143,14 @@ jobs:
           popd
           mkdir -p tile
           mv release-repo/tile/product/*.pivotal tile
+          cat release-repo/tile/tile-history.yml
+          cp release-repo/tile/tile-history.yml tile-history
   - put: splunk-tile
     params:
       file: tile/splunk-*.pivotal
+  - put: tile-history
+    params:
+      file: tile-history/tile-history.yml
 
 - name: bump-patch-version
   plan:
