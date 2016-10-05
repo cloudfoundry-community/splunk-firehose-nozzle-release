@@ -11,15 +11,20 @@ bosh upload stemcell ~/Desktop/bosh/bosh-stemcell-XXXX.X-warden-boshlite-ubuntu-
 ```
 * Get the [Splunk](https://www.splunk.com/download.html) bits
 ```
+mkdir tmp
 wget http://download.splunk.com/products/splunk/releases/6.4.2/linux/splunk-6.4.2-00f5bb3fa822-Linux-x86_64.tgz \
-    -O ~/Downloads/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz
-bosh add blob ~/Downloads/splunk-6.4.2-00f5bb3fa822-linux-x86_64.tgz splunk_6.4.2
+    -O tmp/splunk-linux-x86_64.tgz
+echo "6.4.2" > tmp/splunk-version.txt
+bosh add blob tmp/splunk-linux-x86_64.tgz splunk
+bosh add blob tmp/splunk-version.txt splunk
 ```
 * Get the [Golang](https://golang.org/dl/) bits
 ```
 wget https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz \
-    -O ~/Downloads/go1.6.3.linux-amd64.tar.gz
-bosh add blob ~/Downloads/go1.6.3.linux-amd64.tar.gz golang
+    -O tmp/go-linux-amd64.tar.gz
+echo "1.6.3" > tmp/go-version.txt
+bosh add blob tmp/go1.6.3.linux-amd64.tar.gz golang
+bosh add blob tmp/go-version.txt golang
 ```
 
 * Pull latest submodules, namely `src/splunk-firehose-nozzle`
@@ -28,7 +33,7 @@ git submodule update --init --recursive
 ```
 
 * Generate a deployment manifest
-    * Copy `./manifest-generator/examples/properties` to `./properties.yml`
+    * Copy `./manifest-generation/examples/properties` to `./properties.yml`
     * Customize `./properties.yml` to your environment
     * Generate the manifest ``./scripts/generate-bosh-lite-manifest.sh `bosh status --uuid` properties.yml``
 
