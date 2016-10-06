@@ -21,10 +21,8 @@ git submodule update --init --recursive
     * Generate the manifest ``./scripts/generate-bosh-lite-manifest.sh `bosh status --uuid` properties.yml``
 
 * Create a release
-The following will:
-    * Download [Splunk](https://www.splunk.com/download.html) and [Golang](https://golang.org/dl/) binaries, if not available
-    * Add blobs
-    * Create release
+
+    This will download [Splunk](https://www.splunk.com/download.html) and [Golang](https://golang.org/dl/) binaries (if not available already), add necessary blobs, and create the release:
 ```
 ./scripts/build-release.sh
 ```
@@ -36,7 +34,8 @@ bosh deploy --recreate
 ```
 
 * Iterating
-If `splunk-firehose-nozzle` submodule changed upstream, pull latest before creating the release
+
+    If `splunk-firehose-nozzle` submodule changed upstream, pull latest before creating the release with `./scripts/build-release.sh`:
 ```
 git submodule update src/splunk-firehose-nozzle
 (cd src/splunk-firehose-nozzle; git pull origin HEAD)
