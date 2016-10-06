@@ -62,4 +62,4 @@ HA, doesn't persist past rebuilds, etc)
 
 ## CI
 
-https://ci.run-01.haas-26.pez.pivotal.io/pipelines/splunk-firehose-tile
+https://ci.run-01.haas-26.pez.pivotal.io/pipelines/splunk-firehose-tile-build
