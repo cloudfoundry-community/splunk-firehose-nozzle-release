@@ -11,7 +11,7 @@ resources:
 - name: release-repo
   type: git
   source:
-    branch: ci
+    branch: master
     uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
     username: cf-platform-eng-machine
     password: {{github-password}}
@@ -78,7 +78,7 @@ jobs:
           params:
             icon_emoji: ":robot_face:"
             username: Build pipeline
-            channel: "@cholick"
+            channel: "#splunk"
             text: "unit-tests failed check main pipeline"
 
 - name: build-release
@@ -117,7 +117,7 @@ jobs:
           params:
             icon_emoji: ":robot_face:"
             username: Build pipeline
-            channel: "@cholick"
+            channel: "#splunk"
             text: "build-release failed check main pipeline"
 
   - put: splunk-release
@@ -169,7 +169,7 @@ jobs:
           params:
             icon_emoji: ":robot_face:"
             username: Build pipeline
-            channel: "@cholick"
+            channel: "#splunk"
             text: "build-tile failed check main pipeline"
   - put: splunk-tile
     params:
