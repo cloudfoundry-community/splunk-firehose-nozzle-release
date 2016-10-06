@@ -10,6 +10,7 @@ templates:
   apps_splunkforwarder_app.conf.erb: config/apps_splunkforwarder_local/app.conf
   apps_splunkforwarder_indexes.conf.erb: config/apps_splunkforwarder_local/indexes.conf
   apps_splunkforwarder_inputs.conf.erb: config/apps_splunkforwarder_local/inputs.conf
+  apps_splunkforwarder_outputs.conf.erb: config/apps_splunkforwarder_local/outputs.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
 
 packages:
@@ -30,3 +31,6 @@ properties:
       default: 9997
     splunk_token:
       description: Credentials for talking to the HTTP event collector
+    splunk_cert:
+      description: working...
+      default: 

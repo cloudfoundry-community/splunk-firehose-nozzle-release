@@ -34,7 +34,7 @@ case $1 in
     ;;
 
   stop)
-    exec chpst -u vcap:vcap /var/vcap/packages/splunk/bin/splunk stop
+    exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk stop
     rm -f $PIDFILE
 
     ;;
