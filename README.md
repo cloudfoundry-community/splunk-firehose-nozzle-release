@@ -9,23 +9,6 @@ Local development
 ```
 bosh upload stemcell ~/Desktop/bosh/bosh-stemcell-XXXX.X-warden-boshlite-ubuntu-trusty-go_agent.tgz
 ```
-* Get the [Splunk](https://www.splunk.com/download.html) bits
-```
-mkdir tmp
-wget http://download.splunk.com/products/splunk/releases/6.4.2/linux/splunk-6.4.2-00f5bb3fa822-Linux-x86_64.tgz \
-    -O tmp/splunk-linux-x86_64.tgz
-echo "6.4.2" > tmp/splunk-version.txt
-bosh add blob tmp/splunk-linux-x86_64.tgz splunk
-bosh add blob tmp/splunk-version.txt splunk
-```
-* Get the [Golang](https://golang.org/dl/) bits
-```
-wget https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz \
-    -O tmp/go-linux-amd64.tar.gz
-echo "1.6.3" > tmp/go-version.txt
-bosh add blob tmp/go1.6.3.linux-amd64.tar.gz golang
-bosh add blob tmp/go-version.txt golang
-```
 
 * Pull latest submodules, namely `src/splunk-firehose-nozzle`
 ```
@@ -33,17 +16,30 @@ git submodule update --init --recursive
 ```
 
 * Generate a deployment manifest
-    * Copy `./manifest-generation/examples/properties` to `./properties.yml`
+    * Copy `./manifest-generation/examples/properties.yml` to `./properties.yml`
     * Customize `./properties.yml` to your environment
     * Generate the manifest ``./scripts/generate-bosh-lite-manifest.sh `bosh status --uuid` properties.yml``
 
-* Iterating
+* Create a release
+The following will:
+    * Download [Splunk](https://www.splunk.com/download.html) and [Golang](https://golang.org/dl/) binaries, if not available
+    * Add blobs
+    * Create release
 ```
-git submodule update src/splunk-firehose-nozzle        # If submodule changed upstream
-(cd src/splunk-firehose-nozzle; git pull origin HEAD)  # To get new splunk-firehose-nozzle changes
-bosh create release --force
-bosh upload release dev_releases/cf-splunk/`ls -rt dev_releases/cf-splunk/ | grep "cf" | tail -n1`
+./scripts/build-release.sh
+```
+
+* Upload & deploy release
+```
+bosh upload release
 bosh deploy --recreate
+```
+
+* Iterating
+If `splunk-firehose-nozzle` submodule changed upstream, pull latest before creating the release
+```
+git submodule update src/splunk-firehose-nozzle
+(cd src/splunk-firehose-nozzle; git pull origin HEAD)
 ```
 
 ## Creating a Tile
@@ -56,7 +52,7 @@ mv dev_releases/cf-splunk/*.tgz tile/resources/
 (cd tile; tile build)
 ```
 
-## jobs
+## Jobs
 
 * `splunk-forwarder`: bosh managed Splunk heavy forwarder with HTTP event collector enabled
 * `spunk-nozzle`: Nozzle that drains firehose logs & forwards to HEC. Should be co-located with `splunk-forwarder` 
