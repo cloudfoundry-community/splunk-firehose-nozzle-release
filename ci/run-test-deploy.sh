@@ -2,10 +2,7 @@
 
 set -e
 
-TILE_GEN_DIR="$( cd "$1" && pwd )"
-POOL_DIR="$( cd "$2" && pwd )"
-
-PCF=${TILE_GEN_DIR}/bin/pcf
+POOL_DIR="$( cd "$1" && pwd )"
 
 cd ${POOL_DIR}
 
