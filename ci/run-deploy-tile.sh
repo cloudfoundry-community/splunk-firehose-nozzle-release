@@ -2,15 +2,10 @@
 
 set -e
 
-TILE_GEN_DIR="$( cd "$1" && pwd )"
-REPO_DIR="$( cd "$2" && pwd )"
-TILE_DIR="$( cd "$3" && pwd )"
-POOL_DIR="$( cd "$4" && pwd )"
-MISSING_PROPERTIES_DIR="$( cd "$5" && pwd )"
-
-BIN_DIR="$( cd "${TILE_GEN_DIR}/bin" && pwd )"
-
-PCF="${BIN_DIR}/pcf"
+REPO_DIR="$( cd "$1" && pwd )"
+TILE_DIR="$( cd "$2" && pwd )"
+POOL_DIR="$( cd "$3" && pwd )"
+MISSING_PROPERTIES_DIR="$( cd "$4" && pwd )"
 
 TILE_FILE=`cd "${TILE_DIR}"; ls *.pivotal`
 if [ -z "${TILE_FILE}" ]; then
@@ -25,34 +20,34 @@ VERSION=`echo "${TILE_FILE}" | sed "s/.*-//" | sed "s/\.pivotal\$//"`
 cd "${POOL_DIR}"
 
 echo "Available products:"
-$PCF products
+pcf products
 echo
 
 echo "Uploading ${TILE_FILE}"
-$PCF import "${TILE_DIR}/${TILE_FILE}"
+pcf import "${TILE_DIR}/${TILE_FILE}"
 echo
 
 echo "Available products:"
-$PCF products
-$PCF is-available "${PRODUCT}" "${VERSION}"
+pcf products
+pcf is-available "${PRODUCT}" "${VERSION}"
 echo
 
 echo "Installing product ${PRODUCT} version ${VERSION}"
-$PCF install "${PRODUCT}" "${VERSION}"
+pcf install "${PRODUCT}" "${VERSION}"
 echo
 
 echo "Available products:"
-$PCF products
-$PCF is-installed "${PRODUCT}" "${VERSION}"
+pcf products
+pcf is-installed "${PRODUCT}" "${VERSION}"
 echo
 
 echo "Current missing properties don't work for integration test... just enough to get tile to install"
 echo ""
 
 echo "Configuring product ${PRODUCT}"
-$PCF configure "${PRODUCT}" "${MISSING_PROPERTIES_DIR}/splunk-missing-properties.yml"
+pcf configure "${PRODUCT}" "${MISSING_PROPERTIES_DIR}/splunk-missing-properties.yml"
 echo
 
 echo "Applying Changes"
-$PCF apply-changes --deploy-errands=deploy-all
+pcf apply-changes --deploy-errands=deploy-all
 echo

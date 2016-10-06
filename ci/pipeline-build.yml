@@ -1,10 +1,17 @@
 ---
 
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: release-repo
   type: git
   source:
-    branch: master
+    branch: ci
     uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
     username: cf-platform-eng-machine
     password: {{github-password}}
@@ -42,12 +49,10 @@ resources:
     access_key_id: {{s3-access-key}}
     secret_access_key: {{s3-secret}}
 
-- name: tile-generator-repo
-  type: git
+- name: slack-alert
+  type: slack-notification
   source:
-    ignore_paths: [ "sample" ]
-    branch: master
-    uri: http://github.com/cf-platform-eng/tile-generator.git
+    url: {{slack-hook}}
 
 jobs:
 - name: unit-tests
@@ -67,6 +72,14 @@ jobs:
       - name: release-repo
       run:
         path: release-repo/ci/unit.sh
+    on_failure:
+      aggregate:
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "unit-tests failed check main pipeline"
 
 - name: build-release
   plan:
@@ -82,7 +95,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: guidowb/tile-pipeline
+          repository: cfplatformeng/splunk-ci
       inputs:
       - name: release-repo
       - name: version
@@ -94,11 +107,19 @@ jobs:
         - -exc
         - |
           pushd release-repo
-          ./ci/install.sh
           ./scripts/build-release.sh ../version/number
           popd
           mkdir -p release
           mv release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
+    on_failure:
+      aggregate:
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "build-release failed check main pipeline"
+
   - put: splunk-release
     params:
       file: release/cf-splunk-*.tgz
@@ -107,7 +128,6 @@ jobs:
   plan:
   - aggregate:
     - get: release-repo
-    - get: tile-generator-repo
     - get: tile-history
     - get: version
     - get: splunk-release
@@ -120,10 +140,9 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: guidowb/tile-pipeline
+          repository: cfplatformeng/splunk-ci
       inputs:
       - name: release-repo
-      - name: tile-generator-repo
       - name: tile-history
       - name: splunk-release
       - name: version
@@ -135,7 +154,6 @@ jobs:
         args:
         - -exc
         - |
-          export PATH=$PATH:`pwd`/tile-generator-repo/bin
           cp tile-history/tile-history.yml release-repo/tile
           cp splunk-release/*.tgz release-repo/tile/resources/
           pushd release-repo
@@ -145,6 +163,14 @@ jobs:
           mv release-repo/tile/product/*.pivotal tile
           mkdir -p new-tile-history
           cp release-repo/tile/tile-history.yml new-tile-history
+    on_failure:
+      aggregate:
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "build-tile failed check main pipeline"
   - put: splunk-tile
     params:
       file: tile/splunk-*.pivotal

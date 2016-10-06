@@ -1,5 +1,12 @@
 ---
 
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: splunk-tile
   type: s3
@@ -20,17 +27,10 @@ resources:
 - name: release-repo
   type: git
   source:
-    branch: master
+    branch: ci
     uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
     username: cf-platform-eng-machine
     password: {{github-password}}
-
-- name: tile-generator-repo
-  type: git
-  source:
-    ignore_paths: [ "sample" ]
-    branch: master
-    uri: http://github.com/cf-platform-eng/tile-generator.git
 
 - name: pcf-environment
   type: pool
@@ -40,6 +40,10 @@ resources:
     private_key: {{pipeline-resource-pool-github-repo-private-key}}
     uri: git@github.com:cf-platform-eng/pipeline-resource-pool
 
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: {{slack-hook}}
 
 jobs:
 - name: claim-pcf
@@ -54,7 +58,6 @@ jobs:
 - name: deploy-tile
   plan:
   - aggregate:
-    - get: tile-generator-repo
     - get: splunk-tile
     - get: pcf-environment
       passed:
@@ -68,9 +71,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: guidowb/tile-pipeline
+          repository: cfplatformeng/splunk-ci
       inputs:
-      - name: tile-generator-repo
       - name: pcf-environment
       - name: splunk-tile
       - name: release-repo
@@ -80,7 +82,6 @@ jobs:
       run:
         path: release-repo/ci/run-deploy-tile.sh
         args:
-          - tile-generator-repo
           - release-repo
           - splunk-tile
           - pcf-environment
@@ -90,11 +91,17 @@ jobs:
         - put: pcf-environment
           params:
             release: pcf-environment
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "deploy-tile failed check main pipeline"
+
 
 - name: test-deploy
   plan:
   - aggregate:
-    - get: tile-generator-repo
     - get: pcf-environment
       passed:
       - deploy-tile
@@ -106,9 +113,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: guidowb/tile-pipeline
+          repository: cfplatformeng/splunk-ci
       inputs:
-      - name: tile-generator-repo
       - name: pcf-environment
       - name: release-repo
       outputs:
@@ -123,11 +129,17 @@ jobs:
         - put: pcf-environment
           params:
             release: pcf-environment
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "test-deploy failed check main pipeline"
+
 
 - name: remove-tile
   plan:
   - aggregate:
-    - get: tile-generator-repo
     - get: release-repo
     - get: pcf-environment
       passed:
@@ -139,9 +151,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: guidowb/tile-pipeline
+          repository: cfplatformeng/splunk-ci
       inputs:
-      - name: tile-generator-repo
       - name: pcf-environment
       - name: release-repo
       outputs:
@@ -149,13 +160,19 @@ jobs:
       run:
         path: release-repo/ci/run-remove-tile.sh
         args:
-          - tile-generator-repo
           - pcf-environment
     on_failure:
       aggregate:
         - put: pcf-environment
           params:
             release: pcf-environment
+        - put: slack-alert
+          params:
+            icon_emoji: ":robot_face:"
+            username: Build pipeline
+            channel: "@cholick"
+            text: "remove-tile failed check main pipeline"
+
 
 - name: release-pcf
   plan:
