@@ -8,6 +8,8 @@ templates:
   system_inputs.conf.erb: config/system_local/inputs.conf
   system_user-seed.conf.erb: config/system_local/user-seed.conf
   apps_splunkforwarder_app.conf.erb: config/apps_splunkforwarder_local/app.conf
+  apps_splunkforwarder_indexes.conf.erb: config/apps_splunkforwarder_local/indexes.conf
+  apps_splunkforwarder_inputs.conf.erb: config/apps_splunkforwarder_local/inputs.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
 
 packages:
