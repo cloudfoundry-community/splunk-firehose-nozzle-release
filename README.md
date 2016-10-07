@@ -1,5 +1,7 @@
 # splunk-firehose-nozzle-release
 
+Bosh-managed deployment of Splunk nozzle along with Splunk heavy forwarder with HEC
+
 ## Dev
 
 Local development
