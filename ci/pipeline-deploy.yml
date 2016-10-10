@@ -38,7 +38,7 @@ resources:
     branch: master
     pool: pcf
     private_key: {{pipeline-resource-pool-github-repo-private-key}}
-    uri: git@github.com:cf-platform-eng/pipeline-resource-pool
+    uri: git@github.com:cf-platform-eng/pipeline-resource-pool-v2
 
 - name: slack-alert
   type: slack-notification
