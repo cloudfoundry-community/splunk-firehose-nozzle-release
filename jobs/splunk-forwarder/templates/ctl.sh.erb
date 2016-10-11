@@ -24,6 +24,7 @@ case $1 in
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
     ln -fs ${JOB_DIR}/config/apps_splunkforwarder_local/* ${PACKAGE_DIR}/etc/apps/SplunkForwarder/local/
     ln -fs ${JOB_DIR}/config/apps_splunk_httpinput_local/* ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
+    ln -fs ${JOB_DIR}/config/auth/* ${PACKAGE_DIR}/etc/auth/
 
     ln -fs ${PACKAGE_DIR}/var/log ${LOG_DIR}/daemon_logs
 

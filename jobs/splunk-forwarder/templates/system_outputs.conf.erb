@@ -2,7 +2,15 @@
 defaultGroup = default-autolb-group
 
 [tcpout:default-autolb-group]
+disabled = false
 server = <%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port', 9997) %>
+<% if p('cf_splunk.splunk_ssl') %>
+sslCertPath = $SPLUNK_HOME/etc/auth/client.pem
+sslPassword = password
+sslVerifyServerCert = false
+useClientSSLCompression = true
+compressed = false
+<% end %>
 
 [tcpout-server://<%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port', 9997) %>]
 

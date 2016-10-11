@@ -12,6 +12,7 @@ templates:
   apps_splunkforwarder_inputs.conf.erb: config/apps_splunkforwarder_local/inputs.conf
   apps_splunkforwarder_outputs.conf.erb: config/apps_splunkforwarder_local/outputs.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
+  client.pem.erb: config/auth/client.pem
 
 packages:
 - splunk
@@ -31,6 +32,15 @@ properties:
       default: 9997
     splunk_token:
       description: Credentials for talking to the HTTP event collector
-    splunk_cert:
-      description: working...
-      default: 
+    splunk_ssl:
+      description: Enable SSL authentication
+      default: true
+    splunk_ssl_cert:
+      description: SSL certificate in PEM format
+      default: ~
+    splunk_ssl_password:
+      description: Password associated with SSL certificate (if any)
+      default: ~
+    splunk_ssl_root_ca:
+      description: Root CA certificate store
+      default: ~
