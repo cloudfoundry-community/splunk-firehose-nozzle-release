@@ -71,4 +71,3 @@ fly -t pez2-splunk l -c https://concourse.run-03.haas-71.pez.pivotal.io/ -k -n s
 fly -t pez2-splunk sp -c ci/pipeline-build.yml  -p splunk-firehose-tile-build  -l ~/.splunk-private.yml
 fly -t pez2-splunk sp -c ci/pipeline-deploy.yml -p splunk-firehose-tile-deploy -l ~/.splunk-private.yml
 ```
-
