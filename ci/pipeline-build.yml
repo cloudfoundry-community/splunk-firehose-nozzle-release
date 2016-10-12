@@ -16,12 +16,12 @@ resources:
     username: cf-platform-eng-machine
     password: {{github-password}}
 
-- name: version
+- name: bosh-release-version
   type: semver
   source:
     driver: s3
     bucket: {{s3-bucket}}
-    key: tile-version
+    key: bosh-release-version
     access_key_id: {{s3-access-key}}
     secret_access_key: {{s3-secret}}
 
@@ -88,7 +88,7 @@ jobs:
       passed:
         - unit-tests
       trigger: true
-    - get: version
+    - get: bosh-release-version
   - task: do-build-release
     config:
       platform: linux
@@ -98,7 +98,7 @@ jobs:
           repository: cfplatformeng/splunk-ci
       inputs:
       - name: release-repo
-      - name: version
+      - name: bosh-release-version
       outputs:
         - name: release
       run:
@@ -107,7 +107,7 @@ jobs:
         - -exc
         - |
           pushd release-repo
-          ./scripts/build-release.sh ../version/number
+          ./scripts/build-release.sh ../bosh-release-version/number
           popd
           mkdir -p release
           mv release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
@@ -129,7 +129,7 @@ jobs:
   - aggregate:
     - get: release-repo
     - get: tile-history
-    - get: version
+    - get: bosh-release-version
     - get: splunk-release
       passed:
         - build-release
@@ -145,7 +145,7 @@ jobs:
       - name: release-repo
       - name: tile-history
       - name: splunk-release
-      - name: version
+      - name: bosh-release-version
       outputs:
         - name: tile
         - name: new-tile-history
@@ -157,7 +157,7 @@ jobs:
           cp tile-history/tile-history.yml release-repo/tile
           cp splunk-release/*.tgz release-repo/tile/resources/
           pushd release-repo
-          ./scripts/build-tile.sh ../version/number
+          ./scripts/build-tile.sh ../bosh-release-version/number
           popd
           mkdir -p tile
           mv release-repo/tile/product/*.pivotal tile
@@ -181,35 +181,35 @@ jobs:
 - name: bump-patch-version
   plan:
   - aggregate:
-    - get: version
+    - get: bosh-release-version
     - get: splunk-release
       passed:
         - build-tile
       trigger: true
-  - put: version
+  - put: bosh-release-version
     params:
       bump: patch
 
 - name: manual-bump-patch-version
   plan:
   - aggregate:
-    - get: version
-  - put: version
+    - get: bosh-release-version
+  - put: bosh-release-version
     params:
       bump: patch
 
 - name: manual-bump-minor-version
   plan:
   - aggregate:
-    - get: version
-  - put: version
+    - get: bosh-release-version
+  - put: bosh-release-version
     params:
       bump: minor
 
 - name: manual-bump-major-version
   plan:
   - aggregate:
-    - get: version
-  - put: version
+    - get: bosh-release-version
+  - put: bosh-release-version
     params:
       bump: major

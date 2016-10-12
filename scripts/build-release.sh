@@ -28,7 +28,7 @@ else
     export version=$1
 fi
 
-echo "Building splunk-firhose-nozzle-relese ${version}"
+echo "Building splunk-firehose-nozzle-relese ${version}"
 echo ""
 
 echo "Cleaning up blobs"

@@ -9,4 +9,3 @@ cd ${POOL_DIR}
 echo "No integration tests in place yet"
 
 exit 0
-
