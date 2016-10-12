@@ -40,11 +40,6 @@ forms:
     label: Index
     description: Splunk index
     default: main
-  - name: add_app_info
-    type: boolean
-    default: false
-    label: Add App Info
-    description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
   - name: splunk_ssl
     type: boolean
     label: Enable Splunk SSL
@@ -54,18 +49,17 @@ forms:
     type: text
     label: Enter full client SSL Certificate (PEM format)
     description: SSL certificate in PEM format
-    default: ""
+    optional: true
   - name: splunk_ssl_password
     type: secret
     label: Client SSL Certificate Password
     description: Password associated with SSL certificate (if any)
-    default: ""
+    optional: true
   - name: splunk_ssl_root_ca
     type: text
     label: Enter full root CA certificate (PEM format)
     description: Root CA certificate store
-    default: ""
-
+    optional: true
 
 - name: cf-config
   label: Cloud Foundry
@@ -85,6 +79,11 @@ forms:
     label: Selected events
     default: ValueMetric,CounterEvent,Error,ContainerMetric
     description: Comma separated list of events to include from HttpStartStop,LogMessage,ValueMetric,CounterEvent,Error,ContainerMetric
+  - name: add_app_info
+    type: boolean
+    default: false
+    label: Add App Info
+    description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
 
 - name: advanced
   label: Advanced
