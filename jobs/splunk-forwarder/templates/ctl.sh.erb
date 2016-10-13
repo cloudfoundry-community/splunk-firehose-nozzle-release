@@ -16,6 +16,7 @@ case $1 in
     mkdir -p ${PACKAGE_DIR}/etc/system/local
     mkdir -p ${PACKAGE_DIR}/etc/apps/SplunkForwarder/local
     mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local
+    mkdir -p ${PACKAGE_DIR}/etc/auth/forwarder
 
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
 
@@ -24,7 +25,7 @@ case $1 in
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
     ln -fs ${JOB_DIR}/config/apps_splunkforwarder_local/* ${PACKAGE_DIR}/etc/apps/SplunkForwarder/local/
     ln -fs ${JOB_DIR}/config/apps_splunk_httpinput_local/* ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
-    ln -fs ${JOB_DIR}/config/auth/* ${PACKAGE_DIR}/etc/auth/
+    ln -fs ${JOB_DIR}/config/auth_forwarder/* ${PACKAGE_DIR}/etc/auth/forwarder/
 
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license  --no-prompt --answer-yes\
       >>  $LOG_DIR/forwarder.stdout.log \

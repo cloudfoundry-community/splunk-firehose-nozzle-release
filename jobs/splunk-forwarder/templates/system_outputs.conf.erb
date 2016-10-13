@@ -5,8 +5,8 @@ defaultGroup = default-autolb-group
 disabled = false
 server = <%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port', 9997) %>
 <% if p('cf_splunk.splunk_ssl') %>
-sslCertPath = $SPLUNK_HOME/etc/auth/client.pem
-sslPassword = password
+sslCertPath = $SPLUNK_HOME/etc/auth/forwarder/client.pem
+sslPassword = <%= p('cf_splunk.splunk_ssl_password') %>
 sslVerifyServerCert = false
 useClientSSLCompression = true
 compressed = false

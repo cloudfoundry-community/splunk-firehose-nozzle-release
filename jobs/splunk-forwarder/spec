@@ -12,7 +12,8 @@ templates:
   apps_splunkforwarder_inputs.conf.erb: config/apps_splunkforwarder_local/inputs.conf
   apps_splunkforwarder_outputs.conf.erb: config/apps_splunkforwarder_local/outputs.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
-  client.pem.erb: config/auth/client.pem
+  client.pem.erb: config/auth_forwarder/client.pem
+  ca.pem.erb: config/auth_forwarder/ca.pem
 
 packages:
 - splunk
