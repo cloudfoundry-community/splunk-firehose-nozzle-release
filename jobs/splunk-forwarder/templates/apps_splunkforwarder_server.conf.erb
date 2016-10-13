@@ -1,0 +1,9 @@
+# Disable kvstore and set path to root CA if provided
+
+[kvstore]
+disabled = 1
+
+<% if p('cf_splunk.splunk_ssl') && p('cf_splunk.splunk_ssl_root_ca') %>
+[sslConfig]
+sslRootCAPath = $SPLUNK_HOME/etc/auth/forwarder/ca.pem
+<% end %>
