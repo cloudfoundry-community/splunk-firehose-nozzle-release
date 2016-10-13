@@ -27,11 +27,8 @@ properties:
     admin_pass:
       description: Admin password
       default: changeme
-    indexer_host:
-      description: Fully qualified hostname or ip address of indexer
-    indexer_port:
-      description: Port indexer accepts traffic on
-      default: 9997
+    splunk_server:
+      description: Comma-separated list of Splunk servers to send data to. Each Splunk server specified in this form <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk server is listening
     splunk_token:
       description: Credentials for talking to the HTTP event collector
     splunk_ssl:
@@ -44,12 +41,12 @@ properties:
       description: Password associated with SSL certificate (if applicable)
       default: ~
     splunk_ssl_root_ca:
-      description: (Optional) Root CA certificate store. If defined, it will be used to verify Splunk server certificate(s)
+      description: Root CA certificate store. If defined, it will be used to verify Splunk server certificate(s)
       default: ~
     splunk_ssl_common_name:
-      description: (Optional) Comma-separated list of common names. If defined, this enables checking the common name of Splunk servers certificate(s) against this list.
+      description: Comma-separated list of common names. If defined, this enables checking the common name of Splunk servers certificate(s) against this list.
       default: ~
     splunk_ssl_alt_name:
-      description: (Optional) Comma-separated list of alternate names. If defined, this enables checking the alternate name of Splunk servers certificate(s) against this list.
+      description: Comma-separated list of alternate names. If defined, this enables checking the alternate name of Splunk servers certificate(s) against this list.
       default: ~
 

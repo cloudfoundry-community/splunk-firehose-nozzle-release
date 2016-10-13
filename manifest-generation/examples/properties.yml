@@ -11,6 +11,13 @@ properties:
     events: ValueMetric,CounterEvent,Error,ContainerMetric
     firehose_subscription_id: splunk-firehose-subscription
 
-    splunk_token: 46D19381-22DF-497F-A6E8-F88F12079823
+    splunk_server: 192.168.50.1:9997
     splunk_index: main
-    indexer_host: 192.168.50.1
+    splunk_token: 46D19381-22DF-497F-A6E8-F88F12079823
+
+    splunk_ssl: false
+    splunk_ssl_cert:
+    splunk_ssl_password: password
+    splunk_ssl_root_ca:
+    splunk_ssl_common_name:
+    splunk_ssl_alt_name:

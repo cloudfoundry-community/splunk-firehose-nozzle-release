@@ -3,7 +3,7 @@ defaultGroup = default-autolb-group
 
 [tcpout:default-autolb-group]
 disabled = false
-server = <%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port', 9997) %>
+server = <%= p('cf_splunk.splunk_server') %>
 useACK = true
 <% if p('cf_splunk.splunk_ssl') %>
 sslCertPath = $SPLUNK_HOME/etc/auth/forwarder/client.pem
@@ -15,7 +15,4 @@ useClientSSLCompression = true
 compressed = false
 <% end %>
 
-[tcpout-server://<%= p('cf_splunk.indexer_host') %>:<%= p('cf_splunk.indexer_port', 9997) %>]
-
-# todo: better ways to build this file I'm sure,
-# todo: for now simply taking a simple single server style config
+[tcpout-server://<%= p('cf_splunk.splunk_server') %>]

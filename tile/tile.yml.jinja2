@@ -26,15 +26,10 @@ forms:
   label: Splunk
   description: Custom Properties for Splunk
   properties:
-  - name: indexer_host
+  - name: splunk_server
     type: string
-    label: Indexer host
-    description: Fully qualified hostname or ip address of indexer
-  - name: indexer_port
-    type: integer
-    default: 9997
-    label: Indexer port
-    description: Port indexer accepts traffic on
+    label: Splunk server(s)
+    description: Comma-separated list of Splunk servers to send data to. Each Splunk server specified as <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk server is listening
   - name: splunk_index
     type: string
     label: Index
@@ -150,10 +145,9 @@ packages:
         events: (( .properties.selected_events.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
 
-        splunk_token: (( .properties.token.value ))
+        splunk_server: (( .properties.splunk_server.value ))
         splunk_index: (( .properties.splunk_index.value ))
-        indexer_host: (( .properties.indexer_host.value ))
-        indexer_port: (( .properties.indexer_port.value ))
+        splunk_token: (( .properties.token.value ))
 
         splunk_ssl: (( .properties.splunk_ssl.value ))
         splunk_ssl_cert: (( .properties.splunk_ssl_cert.value ))
