@@ -41,8 +41,15 @@ properties:
       description: SSL certificate in PEM format
       default: ~
     splunk_ssl_password:
-      description: Password associated with SSL certificate (if any)
+      description: Password associated with SSL certificate (if applicable)
       default: ~
     splunk_ssl_root_ca:
-      description: Root CA certificate store
+      description: (Optional) Root CA certificate store. If defined, it will be used to verify Splunk server certificate(s)
       default: ~
+    splunk_ssl_common_name:
+      description: (Optional) Comma-separated list of common names. If defined, this enables checking the common name of Splunk servers certificate(s) against this list.
+      default: ~
+    splunk_ssl_alt_name:
+      description: (Optional) Comma-separated list of alternate names. If defined, this enables checking the alternate name of Splunk servers certificate(s) against this list.
+      default: ~
+

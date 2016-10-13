@@ -47,18 +47,28 @@ forms:
     default: false
   - name: splunk_ssl_cert
     type: text
-    label: Enter full client SSL Certificate (PEM format)
-    description: SSL certificate in PEM format
+    label: Client certificate (PEM format)
+    description: Refer to Splunk Docs on how to prepare your signed certificates into single PEM file http://docs.splunk.com/Documentation/Splunk/latest/Security/HowtoprepareyoursignedcertificatesforSplunk
     optional: true
   - name: splunk_ssl_password
     type: secret
-    label: Client SSL Certificate Password
-    description: Password associated with SSL certificate (if any)
+    label: Client certificate password
+    description: Passphrase for client private key (if applicable)
     optional: true
   - name: splunk_ssl_root_ca
     type: text
-    label: Enter full root CA certificate (PEM format)
-    description: Root CA certificate store
+    label: Root CA certificate(s) (PEM format)
+    description: One or more root CA certificates concatenated together. This will be used to verify target Splunk server(s) certificates.
+    optional: true
+  - name: splunk_ssl_common_name
+    type: string
+    label: Common name(s) of server(s) certificates
+    description: Comma-separated list of common names. The common name of Splunk server(s) certificates will be checked against this list.
+    optional: true
+  - name: splunk_ssl_alt_name
+    type: string
+    label: Alternate name(s) of server(s) certificates
+    description: Comma-separated list of alternate names. The alternate name of Splunk server(s) certificates will be checked against this list.
     optional: true
 
 - name: cf-config

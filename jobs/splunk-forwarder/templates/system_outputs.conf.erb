@@ -8,7 +8,9 @@ useACK = true
 <% if p('cf_splunk.splunk_ssl') %>
 sslCertPath = $SPLUNK_HOME/etc/auth/forwarder/client.pem
 sslPassword = <%= p('cf_splunk.splunk_ssl_password') %>
-sslVerifyServerCert = <%= p('cf_splunk.splunk_ssl_root_ca') ? 'true' : 'false' %>
+sslVerifyServerCert = <%= p('cf_splunk.splunk_ssl_root_ca') || p('cf_splunk.splunk_ssl_common_name') || p('cf_splunk.splunk_ssl_alt_name') ? 'true' : 'false' %>
+<% if_p('cf_splunk.splunk_ssl_common_name') do |prop| %>sslCommonNameToCheck = <%= prop %><% end %>
+<% if_p('cf_splunk.splunk_ssl_alt_name') do |prop| %>sslAltNameToCheck = <%= prop %><% end %>
 useClientSSLCompression = true
 compressed = false
 <% end %>
