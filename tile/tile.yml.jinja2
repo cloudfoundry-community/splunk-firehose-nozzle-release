@@ -1,6 +1,6 @@
 ---
-name: splunk
-label: Splunk
+label: Firehose Nozzle for Splunk
+description: Forward firehose logs & metrics to Splunk
 description: Send logs to Splunk
 icon_file: resources/icon.png
 
@@ -28,7 +28,7 @@ forms:
   properties:
   - name: splunk_server
     type: string
-    label: Splunk server(s)
+    label: Remote Splunk server(s)
     description: Comma-separated list of Splunk servers to send data to. Each Splunk server specified as <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk server is listening
   - name: splunk_index
     type: string
