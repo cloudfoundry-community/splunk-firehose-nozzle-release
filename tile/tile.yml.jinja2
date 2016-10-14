@@ -1,7 +1,7 @@
 ---
+name: splunk-firehose-nozzle
 label: Firehose Nozzle for Splunk
 description: Forward firehose logs & metrics to Splunk
-description: Send logs to Splunk
 icon_file: resources/icon.png
 
 # org: test-org                       # Optional
@@ -79,16 +79,29 @@ forms:
     label: Skip SSL validation
     default: false
     description: Skip SSL validation (to allow things like self-signed certs). Do not set to true in production.
-  - name: selected_events
-    type: string
-    label: Selected events
-    default: ValueMetric,CounterEvent,Error,ContainerMetric
-    description: Comma separated list of events to include from HttpStartStop,LogMessage,ValueMetric,CounterEvent,Error,ContainerMetric
   - name: add_app_info
     type: boolean
     default: false
     label: Add App Info
     description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
+  - name: selected_events
+    type: multi_select_options
+    label: Event Types
+    default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
+    options:
+      - name: HttpStartStop
+        label: HttpStartStop
+      - name: LogMessage
+        label: LogMessage
+      - name: ValueMetric
+        label: ValueMetric
+      - name: CounterEvent
+        label: CounterEvent
+      - name: Error
+        label: Error
+      - name: ContainerMetric
+        label: ContainerMetric
+    description: Event types to forward to Splunk
 
 - name: advanced
   label: Advanced

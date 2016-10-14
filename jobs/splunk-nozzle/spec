@@ -27,8 +27,8 @@ properties:
     doppler_endpoint:
       description: The value of key "logging_endpoint" from /v2/info
     events:
-      description: Comma separated list (without spaces) of events to include from list of HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
-      default: ValueMetric,CounterEvent,Error,ContainerMetric
+      description: Array of event types to include. Possible values are HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
+      default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
     firehose_subscription_id:
       description: Unique identified for nozzle. Only need to change if splunk-firehose-nozzle-releases are deployed
       default: splunk-firehose-subscription
