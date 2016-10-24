@@ -3,7 +3,7 @@
 set -e
 
 POOL_DIR="$( cd "$1" && pwd )"
-PRODUCT="splunk"
+PRODUCT="splunk-firehose-nozzle"
 
 BIN_DIR="$( cd "${TILE_GEN_DIR}/bin" && pwd )"
 
