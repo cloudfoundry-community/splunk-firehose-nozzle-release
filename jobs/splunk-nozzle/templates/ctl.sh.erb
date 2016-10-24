@@ -47,7 +47,6 @@ case $1 in
     export BOLTDB_PATH=${DATA_DIR}/cache.db
     <% end %>
 
-    export DOPPLER_ENDPOINT=<%= p('cf_splunk.doppler_endpoint') %>
     export EVENTS=<%= p('cf_splunk.events', ['ValueMetric','CounterEvent','Error','ContainerMetric']).join(',') %>
     export FIREHOSE_SUBSCRIPTION_ID=<%= p('cf_splunk.firehose_subscription_id', 'splunk-firehose-subscription') %>
 

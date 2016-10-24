@@ -70,10 +70,6 @@ forms:
   label: Cloud Foundry
   description: Cloud Foundry installation details
   properties:
-  - name: doppler_logging_endpoint
-    type: string
-    label: Doppler logging endpoint
-    description: /v2/info -> "doppler_logging_endpoint"
   - name: skip_ssl_validation
     type: boolean
     label: Skip SSL validation
@@ -154,7 +150,6 @@ packages:
         api_user: (( ..cf.uaa.admin_credentials.identity ))
         api_password: (( ..cf.uaa.admin_credentials.password ))
 
-        doppler_endpoint: (( .properties.doppler_logging_endpoint.value ))
         events: (( .properties.selected_events.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
 

@@ -24,8 +24,6 @@ properties:
     api_password:
       description: Password for cf_splunk.firehose_user
 
-    doppler_endpoint:
-      description: The value of key "logging_endpoint" from /v2/info
     events:
       description: Array of event types to include. Possible values are HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
       default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']

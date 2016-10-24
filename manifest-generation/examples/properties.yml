@@ -7,7 +7,6 @@ properties:
     api_user: admin
     api_password: admin
 
-    doppler_endpoint: wss://doppler.bosh-lite.com:4443
     events: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
     firehose_subscription_id: splunk-firehose-subscription
 
