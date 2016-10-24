@@ -2,6 +2,19 @@
 
 set -e
 
+<%
+    # see cloudfoundry/loggregator/jobs/metron_agent/templates/metron_agent.json.erb
+    # try and set these properties from a BOSH 2.0 spec object
+    job_name = spec.job.name
+    instance_id = spec.id
+    if job_name.nil?
+      job_name = name
+    end
+    if instance_id.nil?
+      instance_id = spec.index
+    end
+%>
+
 RUN_DIR=/var/vcap/sys/run/splunk-nozzle
 LOG_DIR=/var/vcap/sys/log/splunk-nozzle
 DATA_DIR=/var/vcap/data/splunk-nozzle
@@ -20,9 +33,9 @@ case $1 in
     pid_guard $PIDFILE "client-registrar"
     echo $$ > "${PIDFILE}"
 
-    export JOB_NAME=<%= spec.name %>
-    export JOB_INDEX=<%= spec.index %>
-    export JOB_HOST=<%= spec.address %>
+    export JOB_NAME='<%= job_name %>'
+    export JOB_INDEX='<%= instance_id %>'
+    export JOB_HOST='<%= spec.address %>'
 
     export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
