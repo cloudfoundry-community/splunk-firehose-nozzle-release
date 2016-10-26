@@ -13,6 +13,13 @@ set -e
     if instance_id.nil?
       instance_id = spec.index
     end
+
+  api_user=p('cf_splunk.api_user_secondary')
+  api_password=p('cf_splunk.api_password_secondary')
+  if_p('cf_splunk.api_user', 'cf_splunk.api_password') do |user, password|
+    api_user=user
+    api_password=password
+  end
 %>
 
 RUN_DIR=/var/vcap/sys/run/splunk-nozzle
@@ -40,8 +47,8 @@ case $1 in
     export SKIP_SSL_VALIDATION=<%= p('cf_splunk.skip_ssl_validation', false) %>
 
     export API_ENDPOINT=<%= p('cf_splunk.api_endoint') %>
-    export API_USER=<%= p('cf_splunk.api_user') %>
-    export API_PASSWORD=<%= p('cf_splunk.api_password') %>
+    export API_USER=<%= api_user %>
+    export API_PASSWORD=<%= api_password %>
     <% if properties.cf_splunk.add_app_info %>
     export ADD_APP_INFO=true
     export BOLTDB_PATH=${DATA_DIR}/cache.db

@@ -80,6 +80,16 @@ forms:
     default: false
     label: Add App Info
     description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
+  - name: api_user
+    type: string
+    label: API user
+    description: Nozzle user. Best practice is to provide a user in keeping with "Rotate, Repave, Repair," so that credentials that can be easily deactivated, rotated, and have minimal access privileges. If left empty, admin will be used.
+    optional: true
+  - name: api_password
+    type: secret
+    label: API password
+    description: Password for API user
+    optional: true
   - name: selected_events
     type: multi_select_options
     label: Event Types
@@ -147,8 +157,10 @@ packages:
 
         add_app_info: (( .properties.add_app_info.value ))
         api_endoint: https://api.(( ..cf.cloud_controller.system_domain.value ))
-        api_user: (( ..cf.uaa.admin_credentials.identity ))
-        api_password: (( ..cf.uaa.admin_credentials.password ))
+        api_user: (( .properties.api_user.value ))
+        api_password: (( .properties.api_password.value ))
+        api_user_secondary: (( ..cf.uaa.admin_credentials.identity ))
+        api_password_secondary: (( ..cf.uaa.admin_credentials.password ))
 
         events: (( .properties.selected_events.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))

@@ -23,6 +23,10 @@ properties:
       description: User to authenticate against cf API (needs cloud_controller.admin or cloud_controller.admin_read_only)
     api_password:
       description: Password for cf_splunk.firehose_user
+    api_user_secondary:
+      description: Fallback credentials to use if api_user/password isn't set. Artifact of ops manager tile templating
+    api_password_secondary:
+      description: Fallback credentials to use if api_user/password isn't set. Artifact of ops manager tile templating
 
     events:
       description: Array of event types to include. Possible values are HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric

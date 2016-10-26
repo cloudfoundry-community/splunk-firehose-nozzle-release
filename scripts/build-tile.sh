@@ -22,6 +22,9 @@ if [ "$#" -lt 1 ]; then
     usage
 fi
 
+echo "Debugging info"
+pip show tile-generator
+
 if [ -e "$1" ]; then
     export version=`cat $1`
 else
