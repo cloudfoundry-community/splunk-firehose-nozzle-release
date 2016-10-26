@@ -45,7 +45,7 @@ echo "Current missing properties don't work for integration test... just enough 
 echo ""
 
 echo "Configuring product ${PRODUCT}"
-pcf configure "${PRODUCT}" "${MISSING_PROPERTIES_DIR}/splunk-missing-properties.yml"
+pcf configure --skip-validation "${PRODUCT}" "${MISSING_PROPERTIES_DIR}/splunk-missing-properties.yml"
 echo
 
 echo "Applying Changes"

@@ -7,5 +7,5 @@ if [ "$0" != "./scripts/docker.sh" ]; then
     exit 1
 fi
 
-docker build ci -t cfplatformeng/splunk-ci
+docker build ci -t cfplatformeng/splunk-ci --no-cache
 docker push cfplatformeng/splunk-ci
