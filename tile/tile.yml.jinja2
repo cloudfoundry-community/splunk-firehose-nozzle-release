@@ -23,8 +23,8 @@ properties:
 
 forms:
 - name: splunk-config
-  label: Splunk
-  description: Custom Properties for Splunk
+  label: Splunk Destination
+  description: Splunk target configuration
   properties:
   - name: splunk_server
     type: string
@@ -35,6 +35,11 @@ forms:
     label: Index
     description: Splunk index
     default: main
+
+- name: splunk-config-ssl
+  label: Splunk SSL Settings
+  description: Splunk connection encryption & authentication
+  properties:
   - name: splunk_ssl
     type: boolean
     label: Enable Splunk SSL
@@ -67,8 +72,8 @@ forms:
     optional: true
 
 - name: cf-config
-  label: Cloud Foundry
-  description: Cloud Foundry installation details
+  label: Cloud Foundry Settings
+  description: Cloud Foundry connection details
   properties:
   - name: skip_ssl_validation
     type: boolean
@@ -83,7 +88,7 @@ forms:
   - name: api_user
     type: string
     label: API user
-    description: Nozzle user. Best practice is to provide a user in keeping with "Rotate, Repave, Repair," so that credentials that can be easily deactivated, rotated, and have minimal access privileges. If left empty, admin will be used.
+    description: Nozzle user. Best practice is to provide a user in keeping with "Rotate, Repave, Repair" so that credentials that can be easily deactivated, rotated, and have minimal access privileges. If left empty, admin will be used.
     optional: true
   - name: api_password
     type: secret
@@ -110,29 +115,29 @@ forms:
     description: Event types to forward to Splunk
 
 - name: advanced
-  label: Advanced
-  description: Properties that likely don't need changed
+  label: Advanced Settings
+  description: Internal Splunk nozzle configuration (for advanced usage or debug)
   properties:
   - name: splunk_admin_user
     type: string
-    label: Admin user
+    label: Splunk Forwarder admin username
     default: admin
-    description: Admin user name (internal to Splunk forwarder, only useful debugging)
+    description: admin username for internal Splunk Forwarder
   - name: splunk_admin_pass
     type: string
-    label: Admin password
-    description: Admin user's password
+    label: Splunk Forwarder admin password
+    description: password for internal Splunk Forwarder
     default: AdminPass1
   - name: token
     type: string
-    label: HEC Token
-    description: Credentials for talking to the HTTP event collector (interal to Splunk forwarder, only useful for debugging)
+    label: HEC Token for internal Splunk Forwarder
+    description: HTTP Event Collector (HEC) token to be internally used by Splunk Forwarder to accept events from firehose
     default: Splunk-HEC-Token-1
   - name: firehose_subscription_id
     type: string
     label: Firehose subscription id
     default: splunk-firehose-subscription-id
-    description: Subscription-id unique to nozzle; firehose balances across socket connections having same id.
+    description: Subscription id unique to nozzle; firehose balances across socket connections having same id.
 
 packages:
 - name: splunk-bosh-release
