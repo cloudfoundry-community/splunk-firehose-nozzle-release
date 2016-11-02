@@ -14,8 +14,8 @@ set -e
       instance_id = spec.index
     end
 
-  api_user=p('cf_splunk.api_user_secondary')
-  api_password=p('cf_splunk.api_password_secondary')
+  api_user=p('cf_splunk.api_user_secondary', '')
+  api_password=p('cf_splunk.api_password_secondary', '')
   if_p('cf_splunk.api_user', 'cf_splunk.api_password') do |user, password|
     api_user=user
     api_password=password
