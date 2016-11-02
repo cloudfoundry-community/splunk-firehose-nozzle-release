@@ -1,6 +1,6 @@
 ---
 name: splunk-firehose-nozzle
-label: Firehose Nozzle for Splunk
+label: Splunk Nozzle for PCF Firehose
 description: Forward firehose logs & metrics to Splunk
 icon_file: resources/icon.png
 
@@ -115,7 +115,7 @@ forms:
     description: Event types to forward to Splunk
 
 - name: advanced
-  label: Advanced Settings
+  label: Advanced
   description: Internal Splunk nozzle configuration (for advanced usage or debug)
   properties:
   - name: splunk_admin_user
@@ -130,7 +130,7 @@ forms:
     default: AdminPass1
   - name: token
     type: string
-    label: HEC Token for internal Splunk Forwarder
+    label: Splunk Forwarder HEC Token
     description: HTTP Event Collector (HEC) token to be internally used by Splunk Forwarder to accept events from firehose
     default: Splunk-HEC-Token-1
   - name: firehose_subscription_id
