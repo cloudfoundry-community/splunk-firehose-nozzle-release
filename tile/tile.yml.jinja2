@@ -159,11 +159,8 @@ packages:
       release: cf-splunk
     - name: splunk-nozzle
       release: cf-splunk
-    memory: 512
-    ephemeral_disk: 4096
-    cpu: 2
-    dynamic_ip: 0
-    static_ip: 1
+    dynamic_ip: 1
+    instances: 2
     properties:
       cf_splunk:
         # shared properties
