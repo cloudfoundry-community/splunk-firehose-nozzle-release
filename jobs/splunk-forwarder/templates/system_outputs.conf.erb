@@ -6,7 +6,7 @@ disabled = false
 server = <%= p('cf_splunk.splunk_server') %>
 useACK = true
 <% if p('cf_splunk.splunk_ssl') %>
-sslCertPath = $SPLUNK_HOME/etc/auth/forwarder/client.pem
+clientCert = $SPLUNK_HOME/etc/auth/forwarder/client.pem
 sslPassword = <%= p('cf_splunk.splunk_ssl_password') %>
 sslVerifyServerCert = <%= p('cf_splunk.splunk_ssl_root_ca') || p('cf_splunk.splunk_ssl_common_name') || p('cf_splunk.splunk_ssl_alt_name') ? 'true' : 'false' %>
 <% if_p('cf_splunk.splunk_ssl_common_name') do |prop| %>sslCommonNameToCheck = <%= prop %><% end %>
