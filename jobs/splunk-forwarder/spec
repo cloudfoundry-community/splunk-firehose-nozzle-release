@@ -33,20 +33,19 @@ properties:
       description: Credentials for talking to the HTTP event collector
     splunk_ssl:
       description: Enable SSL authentication
-      default: true
+      default: false
     splunk_ssl_cert:
       description: SSL certificate in PEM format
-      default: ~
+      default: ''
     splunk_ssl_password:
       description: Password associated with SSL certificate (if applicable)
-      default: ~
+      default: ''
     splunk_ssl_root_ca:
       description: Root CA certificate store. If defined, it will be used to verify Splunk server certificate(s)
-      default: ~
+      default: ''
     splunk_ssl_common_name:
       description: Comma-separated list of common names. If defined, this enables checking the common name of Splunk servers certificate(s) against this list.
-      default: ~
+      default: ''
     splunk_ssl_alt_name:
       description: Comma-separated list of alternate names. If defined, this enables checking the alternate name of Splunk servers certificate(s) against this list.
-      default: ~
-
+      default: ''
