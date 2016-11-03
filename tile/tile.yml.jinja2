@@ -25,6 +25,8 @@ forms:
 - name: splunk-config
   label: Splunk Destination
   description: Splunk target configuration
+  markdown: |
+    Configure your Splunk target destination of one or more servers
   properties:
   - name: splunk_server
     type: string
@@ -39,6 +41,13 @@ forms:
 - name: splunk-config-ssl
   label: Splunk SSL Settings
   description: Splunk connection encryption & authentication
+  markdown: |
+    You can configure Splunk forwarding to use your own SSL certificates to ensure that your data is securely encrypted when in transit.
+    This is not required for using the Splunk Nozzle but it is highly recommended.
+    
+    Follow Splunk documented instructions on [how to prepare your signed certificates into single PEM file](http://docs.splunk.com/Documentation/Splunk/6.5.0/Security/HowtoprepareyoursignedcertificatesforSplunk) to be provided as `Client certificate` in this form.
+
+    Refer to Splunk Docs for more background on [securing data from forwarders](http://docs.splunk.com/Documentation/Splunk/6.5.0/Security/Aboutsecuringdatafromforwarders)
   properties:
   - name: splunk_ssl
     type: boolean
@@ -48,7 +57,7 @@ forms:
   - name: splunk_ssl_cert
     type: text
     label: Client certificate (PEM format)
-    description: Refer to Splunk Docs on how to prepare your signed certificates into single PEM file http://docs.splunk.com/Documentation/Splunk/latest/Security/HowtoprepareyoursignedcertificatesforSplunk
+    description: Properly concatenated client certificate, client private key & public certificate as single PEM file
     optional: true
   - name: splunk_ssl_password
     type: secret
