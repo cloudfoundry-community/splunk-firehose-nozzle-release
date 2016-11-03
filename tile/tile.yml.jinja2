@@ -171,10 +171,8 @@ packages:
 
         add_app_info: (( .properties.add_app_info.value ))
         api_endoint: https://api.(( ..cf.cloud_controller.system_domain.value ))
-        api_user: (( .properties.api_user.value ))
-        api_password: (( .properties.api_password.value ))
-        api_user_secondary: (( ..cf.uaa.admin_credentials.identity ))
-        api_password_secondary: (( ..cf.uaa.admin_credentials.password ))
+        api_user: (( .properties.api_user.value || ..cf.uaa.splunk_firehose_credentials.identity ))
+        api_password: (( .properties.api_password.value || ..cf.uaa.splunk_firehose_credentials.password ))
 
         events: (( .properties.selected_events.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
