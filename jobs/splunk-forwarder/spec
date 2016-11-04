@@ -13,6 +13,7 @@ templates:
   apps_splunkforwarder_outputs.conf.erb: config/apps_splunkforwarder_local/outputs.conf
   apps_splunkforwarder_server.conf.erb: config/apps_splunkforwarder_local/server.conf
   hec_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
+  hec_limits.conf.erb: config/apps_splunk_httpinput_local/limits.conf
   client.pem.erb: config/auth_forwarder/client.pem
   ca.pem.erb: config/auth_forwarder/ca.pem
 
