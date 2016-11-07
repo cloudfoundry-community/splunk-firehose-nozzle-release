@@ -83,6 +83,18 @@ forms:
 - name: cf-config
   label: Cloud Foundry Settings
   description: Cloud Foundry connection details
+  markdown: |
+    On deployments with runtimes 1.8.9/1.7.29 and above,
+    the built in user `splunk-firehose` will be used when no user is specified.
+
+    API user is **required** for earlier versions of the Elastic Runtimes.
+    Failing to specify the API user on versions without `splunk-firehose` will result in:
+
+    ```
+    unknown property "splunk_firehose_credentials"...
+    ```
+
+    See the docs for detailed instructions on creating a user.
   properties:
   - name: skip_ssl_validation
     type: boolean
@@ -97,7 +109,7 @@ forms:
   - name: api_user
     type: string
     label: API user
-    description: Nozzle user. Best practice is to provide a user in keeping with "Rotate, Repave, Repair" so that credentials that can be easily deactivated, rotated, and have minimal access privileges. If left empty, admin will be used.
+    description: Nozzle user (a user having both "cloud_controller.admin_read_only" and "doppler.firehose splunk-nozzle"
     optional: true
   - name: api_password
     type: secret
