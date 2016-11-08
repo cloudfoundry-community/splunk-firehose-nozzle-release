@@ -159,6 +159,11 @@ forms:
     label: Firehose subscription id
     default: splunk-firehose-subscription-id
     description: Subscription id unique to nozzle; firehose balances across socket connections having same id.
+  - name: firehose_extra_fields
+    type: string
+    label: Key:value pairs
+    description: Arbitrary set of key:value pairs in the form "key1:value1,key2:value2,key3:value3". These are added to index-time payloads. These values tag all events from this foundation.
+    optional: true
 
 packages:
 - name: splunk-bosh-release
@@ -184,6 +189,7 @@ packages:
         api_password: (( .properties.api_password.value || ..cf.uaa.splunk_firehose_credentials.password ))
 
         events: (( .properties.selected_events.value ))
+        extra_fields: (( .properties.firehose_extra_fields.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
 
         splunk_server: (( .properties.splunk_server.value ))

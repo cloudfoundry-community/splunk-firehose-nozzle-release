@@ -49,6 +49,9 @@ case $1 in
     export ADD_APP_INFO=true
     export BOLTDB_PATH=${DATA_DIR}/cache.db
     <% end %>
+    <% if_p("cf_splunk.extra_fields") do |fields| %>
+    export EXTRA_FIELDS=<%= fields %>
+    <% end %>
 
     export EVENTS=<%= p('cf_splunk.events', ['ValueMetric','CounterEvent','Error','ContainerMetric']).join(',') %>
     export FIREHOSE_SUBSCRIPTION_ID=<%= p('cf_splunk.firehose_subscription_id', 'splunk-firehose-subscription') %>

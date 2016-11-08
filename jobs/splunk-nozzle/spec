@@ -27,6 +27,8 @@ properties:
     events:
       description: Array of event types to include. Possible values are HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
       default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
+    extra_fields:
+      description: An optional list of key value pairs in the form of "key1:value1,key2:value2". These are added to the index-time fields in Splunk.
     firehose_subscription_id:
       description: Unique identified for nozzle. Only need to change if splunk-firehose-nozzle-releases are deployed
       default: splunk-firehose-subscription
