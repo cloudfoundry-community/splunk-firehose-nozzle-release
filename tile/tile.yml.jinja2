@@ -1,6 +1,6 @@
 ---
 name: splunk-firehose-nozzle
-label: Splunk Nozzle for PCF Firehose
+label: Splunk Firehose Nozzle for PCF
 description: Forward firehose logs & metrics to Splunk
 icon_file: resources/icon.png
 
@@ -31,12 +31,17 @@ forms:
   - name: splunk_server
     type: string
     label: Remote Splunk server(s)
-    description: Comma-separated list of Splunk servers to send data to. Each Splunk server specified as <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk server is listening
+    description: Comma-separated list of Splunk indexers to send data to. Each Splunk indexer specified as <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk indexer is listening
   - name: splunk_index
     type: string
     label: Index
     description: Splunk index
     default: main
+  - name: extra_fields
+    type: string
+    label: Additional fields for metadata
+    description: Arbitrary set of key:value pairs in the form "key1:value1,key2:value2,key3:value3" that do not occur in event payload itself. These fields are added to every event payload for indexing by Splunk, and are used to tag all events from this foundation.
+    optional: true
 
 - name: splunk-config-ssl
   label: Splunk SSL Settings
@@ -67,7 +72,7 @@ forms:
   - name: splunk_ssl_root_ca
     type: text
     label: Root CA certificate(s) (PEM format)
-    description: One or more root CA certificates concatenated together. This will be used to verify target Splunk server(s) certificates.
+    description: One or more root CA certificates concatenated together. This will be used to verify target Splunk indexer(s) certificates.
     optional: true
   - name: splunk_ssl_common_name
     type: string
@@ -104,7 +109,7 @@ forms:
   - name: add_app_info
     type: boolean
     default: false
-    label: Add App Info
+    label: Add app info
     description: When true, nozzle will query cloud controller to add name, space, org. This will greatly increase load on the cloud controller.
   - name: api_user
     type: string
@@ -118,7 +123,7 @@ forms:
     optional: true
   - name: selected_events
     type: multi_select_options
-    label: Event Types
+    label: Event types
     default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
     options:
       - name: HttpStartStop
@@ -159,11 +164,6 @@ forms:
     label: Firehose subscription id
     default: splunk-firehose-subscription-id
     description: Subscription id unique to nozzle; firehose balances across socket connections having same id.
-  - name: firehose_extra_fields
-    type: string
-    label: Key:value pairs
-    description: Arbitrary set of key:value pairs in the form "key1:value1,key2:value2,key3:value3". These are added to index-time payloads. These values tag all events from this foundation.
-    optional: true
 
 packages:
 - name: splunk-bosh-release
@@ -189,7 +189,7 @@ packages:
         api_password: (( .properties.api_password.value || ..cf.uaa.splunk_firehose_credentials.password ))
 
         events: (( .properties.selected_events.value ))
-        extra_fields: (( .properties.firehose_extra_fields.value ))
+        extra_fields: (( .properties.extra_fields.value ))
         firehose_subscription_id: (( .properties.firehose_subscription_id.value ))
 
         splunk_server: (( .properties.splunk_server.value ))
