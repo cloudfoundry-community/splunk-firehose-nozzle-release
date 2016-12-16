@@ -64,7 +64,7 @@ HA, doesn't persist past rebuilds, etc)
 
 ## CI
 
-https://concourse.run-03.haas-71.pez.pivotal.io
+https://concourse.cfplatformeng.com/teams/splunk/pipelines/splunk-firehose-tile-build
 
 ```
 fly -t pez2-splunk l -c https://concourse.run-03.haas-71.pez.pivotal.io/ -k -n splunk -u <user> -p <password>
