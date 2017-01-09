@@ -12,9 +12,12 @@ resources:
   type: git
   source:
     branch: master
-    uri: https://github.com/cf-platform-eng/splunk-firehose-nozzle-release.git
+    uri: https://github.com/cloudfoundry-community/splunk-firehose-nozzle-release.git
     username: cf-platform-eng-machine
     password: {{github-password}}
+    ignore_paths:
+      - ci/*.yml
+      - ci/docker/*
 
 - name: bosh-release-version
   type: semver

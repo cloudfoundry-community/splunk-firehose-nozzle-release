@@ -44,10 +44,13 @@ git submodule update src/splunk-firehose-nozzle
 ```
 
 ## Creating a Tile
-Checkout [tile-generator](https://github.com/cf-platform-eng/tile-generator)
-and make sure `tile-generator/bin` is in `$PATH`
-
+Install [tile-generator](https://github.com/cf-platform-eng/tile-generator):
+```bash
+pip install tile-generator
 ```
+
+And create the tile:
+```bash
 bosh create release --force --with-tarball
 mv dev_releases/cf-splunk/*.tgz tile/resources/
 (cd tile; tile build)
@@ -57,8 +60,6 @@ mv dev_releases/cf-splunk/*.tgz tile/resources/
 
 * `splunk-forwarder`: bosh managed Splunk heavy forwarder with HTTP event collector enabled
 * `spunk-nozzle`: Nozzle that drains firehose logs & forwards to HEC. Should be co-located with `splunk-forwarder` 
-* `client-registrar`: A job that uses a uaa admin to register firehose nozzle credentials, skippable if creating
-proper credentials outside of this deployment
 * `splunk-full`: bosh managed Splunk search head and indexer. Intended for internal testing only (not 
 HA, doesn't persist past rebuilds, etc)
 

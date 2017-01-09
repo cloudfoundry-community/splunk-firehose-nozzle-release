@@ -10,7 +10,7 @@ fi
 function usage(){
   >&2 echo "
  Usage:
-    $0 version
+    $0 [version]
 
  Ex:
     $0 0+dev.1
@@ -18,14 +18,17 @@ function usage(){
   exit 1
 }
 
-if [ "$#" -lt 1 ]; then
+if [ "$1" == "-h" ] || [ "$1" == "--help"  ] || [ "$1" == "help"  ]; then
     usage
 fi
 
-if [ -e "$1" ]; then
-    export version=`cat $1`
-else
-    export version=$1
+
+if [ "$#" -gt 0 ]; then
+    if [ -e "$1" ]; then
+        export version=`cat $1`
+    else
+        export version=$1
+    fi
 fi
 
 echo "Building splunk-firehose-nozzle-relese ${version}"
@@ -41,7 +44,7 @@ mkdir -p tmp
 
 export go_pkg_path=./tmp/go-linux-amd64.tar.gz
 export go_version_path=./tmp/go-version.txt
-export go_pkg_remote=https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz
+export go_pkg_remote=https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz
 
 export splunk_pkg_path=./tmp/splunk-linux-x86_64.tgz
 export splunk_version_path=./tmp/splunk-version.txt
@@ -70,4 +73,9 @@ bosh add blob "${splunk_pkg_path}" splunk
 bosh add blob "${splunk_version_path}" splunk
 
 echo "Creating release"
-bosh create release --name cf-splunk --with-tarball --version "${version}" --force
+create_cmd="bosh create release --name cf-splunk --with-tarball --force"
+if [ "$version" != "" ]; then
+    create_cmd+=" --version "${version}""
+fi
+
+eval ${create_cmd}
