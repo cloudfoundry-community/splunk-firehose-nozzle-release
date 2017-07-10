@@ -13,8 +13,6 @@ resources:
   source:
     branch: master
     uri: https://github.com/cloudfoundry-community/splunk-firehose-nozzle-release.git
-    username: cf-platform-eng-machine
-    password: {{github-password}}
     ignore_paths:
       - ci/*.yml
       - ci/docker/*
@@ -58,38 +56,11 @@ resources:
     url: {{slack-hook}}
 
 jobs:
-- name: unit-tests
-  plan:
-  - aggregate:
-    - get: release-repo
-      trigger: true
-  - task: run-deployment-tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-          tag: '1.7'
-      inputs:
-      - name: release-repo
-      run:
-        path: release-repo/ci/unit.sh
-    on_failure:
-      aggregate:
-        - put: slack-alert
-          params:
-            icon_emoji: ":robot_face:"
-            username: Build pipeline
-            channel: "#splunk"
-            text: "unit-tests failed check main pipeline"
 
 - name: build-release
   plan:
   - aggregate:
     - get: release-repo
-      passed:
-        - unit-tests
       trigger: true
     - get: bosh-release-version
   - task: do-build-release
