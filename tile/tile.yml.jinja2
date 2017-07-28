@@ -32,17 +32,53 @@ forms:
     type: string
     label: Remote Splunk server(s)
     description: Comma-separated list of Splunk indexers to send data to. Each Splunk indexer specified as <address>:<port>, where address is either FQDN or IP address, and port is the port on which Splunk indexer is listening
-  - name: splunk_index
+  - name: splunk_default_index
     type: string
-    label: Index
-    description: Splunk index
-    default: main
+    label: Default Index
+    optional: true
+    description: If default index or index routing rules are not configured, data will be routed to Splunk HEC default index 
+  - name: config_index_routing_rules
+    type: collection
+    label: Index Routing Rules
+    description: Configure Index Routing Rules according to your preferences
+    configurable: true
+    property_blueprints:
+    - name: route_by_rule
+      type: dropdown_select
+      label: Route By
+      configurable: true
+      optional: true
+      description: Select a rule to route Index Routing Rules
+      options:
+      - name: app_id
+        label: Application ID
+      - name: space_id
+        label: Space ID
+      - name: ord_id
+        label: Org ID
+    - name: priority_order
+      type: integer
+      label: Priority Order
+      configurable: true
+      optional: true
+      description: Order number to set the priority of the rule
+    - name: id
+      type: string
+      label: ID
+      configurable: true
+      optional: true
+      description: Unique ID of the rule entity
+    - name: splunk_index_route
+      type: string
+      label: Splunk Index
+      configurable: true
+      optional: true
+      description: Splunk Index to route data to for the selected rule
   - name: extra_fields
     type: string
     label: Additional fields for metadata
     description: Arbitrary set of key:value pairs in the form "key1:value1,key2:value2,key3:value3" that do not occur in event payload itself. These fields are added to every event payload for indexing by Splunk, and are used to tag all events from this foundation.
     optional: true
-
 - name: splunk-config-ssl
   label: Splunk SSL Settings
   description: Splunk connection encryption & authentication
@@ -163,8 +199,7 @@ forms:
     type: string
     label: Firehose subscription id
     default: splunk-firehose-subscription-id
-    description: Subscription id unique to nozzle; firehose balances across socket connections having same id.
-
+    description: Subscription id unique to nozzle; firehose balances across socket connections having same id
 packages:
 - name: splunk-bosh-release
   type: bosh-release
