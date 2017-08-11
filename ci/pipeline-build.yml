@@ -63,14 +63,14 @@ jobs:
         args:
         - -exc
         - |
-          cp tile-history/tile-history.yml release-repo/tile
-          pushd release-repo
-          ./scripts/build-tile.sh
+          cp tile-history/tile-history.yml release-repo/src/splunk-firehose-nozzle/tile
+          pushd release-repo/src/splunk-firehose-nozzle/tile
+          ./build.sh
           popd
           mkdir -p tile
-          mv release-repo/tile/product/*.pivotal tile
+          mv release-repo/src/splunk-firehose-nozzle/tile/product/*.pivotal tile
           mkdir -p new-tile-history
-          cp release-repo/tile/tile-history.yml new-tile-history
+          cp release-repo/src/splunk-firehose-nozzle/tile/tile-history.yml new-tile-history
     on_failure:
       aggregate:
         - put: slack-alert
