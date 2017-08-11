@@ -17,23 +17,6 @@ resources:
       - ci/*.yml
       - ci/docker/*
 
-- name: bosh-release-version
-  type: semver
-  source:
-    driver: s3
-    bucket: {{s3-bucket}}
-    key: bosh-release-version
-    access_key_id: {{s3-access-key}}
-    secret_access_key: {{s3-secret}}
-
-- name: splunk-release
-  type: s3
-  source:
-    regexp: releases/cf-splunk.*-(?P<version>.*)\.tgz
-    bucket: {{s3-bucket}}
-    access_key_id: {{s3-access-key}}
-    secret_access_key: {{s3-secret}}
-
 - name: splunk-tile
   type: s3
   source:
@@ -57,57 +40,11 @@ resources:
 
 jobs:
 
-- name: build-release
-  plan:
-  - aggregate:
-    - get: release-repo
-      trigger: true
-    - get: bosh-release-version
-  - task: do-build-release
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: cfplatformeng/splunk-ci
-      inputs:
-      - name: release-repo
-      - name: bosh-release-version
-      outputs:
-        - name: release
-      run:
-        path: bash
-        args:
-        - -exc
-        - |
-          pushd release-repo
-          ./scripts/build-release.sh ../bosh-release-version/number
-          popd
-          mkdir -p release
-          mv release-repo/dev_releases/cf-splunk/cf-splunk-*.tgz release
-    on_failure:
-      aggregate:
-        - put: slack-alert
-          params:
-            icon_emoji: ":robot_face:"
-            username: Build pipeline
-            channel: "#splunk"
-            text: "build-release failed check main pipeline"
-
-  - put: splunk-release
-    params:
-      file: release/cf-splunk-*.tgz
-
 - name: build-tile
   plan:
   - aggregate:
     - get: release-repo
     - get: tile-history
-    - get: bosh-release-version
-    - get: splunk-release
-      passed:
-        - build-release
-      trigger: true
   - task: do-build-tile
     config:
       platform: linux
@@ -118,8 +55,6 @@ jobs:
       inputs:
       - name: release-repo
       - name: tile-history
-      - name: splunk-release
-      - name: bosh-release-version
       outputs:
         - name: tile
         - name: new-tile-history
@@ -129,9 +64,8 @@ jobs:
         - -exc
         - |
           cp tile-history/tile-history.yml release-repo/tile
-          cp splunk-release/*.tgz release-repo/tile/resources/
           pushd release-repo
-          ./scripts/build-tile.sh ../bosh-release-version/number
+          ./scripts/build-tile.sh
           popd
           mkdir -p tile
           mv release-repo/tile/product/*.pivotal tile
@@ -151,39 +85,3 @@ jobs:
   - put: tile-history
     params:
       file: new-tile-history/tile-history.yml
-
-- name: bump-patch-version
-  plan:
-  - aggregate:
-    - get: bosh-release-version
-    - get: splunk-release
-      passed:
-        - build-tile
-      trigger: true
-  - put: bosh-release-version
-    params:
-      bump: patch
-
-- name: manual-bump-patch-version
-  plan:
-  - aggregate:
-    - get: bosh-release-version
-  - put: bosh-release-version
-    params:
-      bump: patch
-
-- name: manual-bump-minor-version
-  plan:
-  - aggregate:
-    - get: bosh-release-version
-  - put: bosh-release-version
-    params:
-      bump: minor
-
-- name: manual-bump-major-version
-  plan:
-  - aggregate:
-    - get: bosh-release-version
-  - put: bosh-release-version
-    params:
-      bump: major

@@ -31,7 +31,7 @@ if [ "$#" -gt 0 ]; then
     fi
 fi
 
-echo "Building splunk-firehose-nozzle-relese ${version}"
+echo "Building splunk-firehose-nozzle-release ${version}"
 echo ""
 
 echo "Cleaning up blobs"
