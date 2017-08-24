@@ -1,4 +1,3 @@
 [submodule "src/splunk-firehose-nozzle"]
 	path = src/splunk-firehose-nozzle
 	url = https://github.com/cloudfoundry-community/splunk-firehose-nozzle
-	branch = feature/deploy-nozzle-as-PCF-app-via-tile
