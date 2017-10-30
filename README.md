@@ -1,3 +1,5 @@
+This repository is **deprecated**. The nozzle is now packaged to run as an app rather than a BOSH release. See https://github.com/cloudfoundry-community/splunk-firehose-nozzle
+
 # splunk-firehose-nozzle-release
 
 Bosh-managed deployment of Splunk nozzle for Cloud Foundry firehose along with pre-configured Splunk Forwarder
